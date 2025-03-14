@@ -29,5 +29,5 @@ jobs:
 #        npm build
 #    - name: Deploy static site to S3 bucket
 #      run: |
-#        aws s3 sync ./out/ s3://vulineage-content --delete
+#        aws s3 sync ./artifact/ s3://vulineage-content --delete
 #        aws cloudfront create-invalidation --distribution-id ECD1234 --paths '/*'
