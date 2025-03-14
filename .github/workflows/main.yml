@@ -13,21 +13,21 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-#    - name: Configure AWS Credentials
-#      uses: aws-actions/configure-aws-credentials@v1
-#      with:
-#        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        aws-region: us-east-1
-#    - name: Setup npm
-#      uses: actions/setup-node@v3
-#      with:
-#        node-version: '20.9.0'
-#        cache: 'npm'
-#    - name: Build
-#      run: |
-#        npm build
-#    - name: Deploy static site to S3 bucket
-#      run: |
-#        aws s3 sync ./artifact/ s3://vulineage-content --delete
-#        aws cloudfront create-invalidation --distribution-id E2336QBSTR8HBE --paths '/*'
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    - name: Setup npm
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.9.0'
+        cache: 'npm'
+    - name: Build
+      run: |
+        npm build
+    - name: Deploy static site to S3 bucket
+      run: |
+        aws s3 sync ./artifact/ s3://vulineage-content --delete
+        aws cloudfront create-invalidation --distribution-id E2336QBSTR8HBE --paths '/*'
