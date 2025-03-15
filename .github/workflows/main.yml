@@ -19,11 +19,11 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
-    - name: Setup npm
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.9.0'
-        cache: 'npm'
+#    - name: Setup npm
+#      uses: actions/setup-node@v3
+#      with:
+#        node-version: '20.9.0'
+#        cache: 'npm'
 #    - name: Build
 #      run: |
 #        npm build
