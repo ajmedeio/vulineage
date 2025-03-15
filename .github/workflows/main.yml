@@ -5,7 +5,7 @@ on:
     - cron: "37 0 * * *"
   push:
     branches:
-    - master
+    - main
 
 jobs:
   deploy:
