@@ -6,7 +6,8 @@
     <meta http-equiv="Content-Security-Policy" 
         content="
             script-src-elem 'self' https://maxcdn.bootstrapcdn.com https://d3js.org https://code.jquery.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';
-            default-src * 'unsafe-eval';
+            script-src 'self' 'unsafe-eval' 'unsafe-inline';
+            default-src *;
             style-src 'self' https://maxcdn.bootstrapcdn.com 'unsafe-inline';
             img-src * data:;
     ">
