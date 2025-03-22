@@ -13,3 +13,6 @@ The following command assumes you have the `vulineage-database-ssh-key.pem` on y
 
 ## Copying the server.py to the database server
 `scp -i ~/Desktop/vulineage-database-ssh-key.pem ~/repos/ajmedeio/vulineage/server.py ec2-user@ec2-204-236-197-103.compute-1.amazonaws.com:/home/ec2-user`
+
+## Testing
+`curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"query":"select 1"}' http://ec2-204-236-197-103.compute-1.amazonaws.com:9631`
