@@ -1,13 +1,12 @@
 import http.server
 import socketserver
+import sqlite3
 
 PORT = 9631
 DIRECTORY = "/public"
 MAX_BODY_SIZE = 256 * 1024  # 256 KB
 
 def db_read(query):
-    import sqlite3
-    
     cursor = db_connection.cursor()
     cursor.execute(query)
     rows = cursor.fetchall()
