@@ -1,3 +1,4 @@
+import json
 import http.server
 import socketserver
 import sqlite3
@@ -10,6 +11,7 @@ def db_read(query):
     cursor = db_connection.cursor()
     cursor.execute(query)
     rows = cursor.fetchall()
+    return rows
 
 class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
