@@ -16,3 +16,6 @@ The following command assumes you have the `vulineage-database-ssh-key.pem` on y
 
 ## Testing
 `curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"query":"select 1"}' http://ec2-204-236-197-103.compute-1.amazonaws.com:9631`
+
+## Checking Server Logs (while ssh'ed into database server)
+`journalctl -u server.py.service -f`
