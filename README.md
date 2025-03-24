@@ -21,7 +21,7 @@ The following command assumes you have the `vulineage-database-ssh-key.pem` on y
 
 `curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d @get_vulnerabilities_by_image_id.json http://ec2-204-236-197-103.compute-1.amazonaws.com:9631`
 
-
+For windows user, just change the double quotes into single quotes in `curl` commands
 
 ## Checking Server Logs (while ssh'ed into database server)
 `journalctl -u server.py.service -f`
