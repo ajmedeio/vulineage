@@ -77,6 +77,18 @@ function updateChart(filterKey) {
 }
 
 (async () => {
+    const requestBody = { query: "SELECT ld.*, iil.image_id, id.committed_date FROM lineage_details ld JOIN lineage_id_to_image_id  iil ON ld.lineage_id = iil.lineage_id JOIN image_details id ON iil.image_id = id.image_id WHERE ld.lineage_id = -1000033263475935320 ORDER BY id.committed_date" }
+    let response = await fetch('http://ec2-204-236-197-103.compute-1.amazonaws.com:9631', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
+    console.log(await response.json())
+    return
+
     csvData = await d3.csv('letter_freq.csv', dataPreprocessor)
     
     letters = lettersMap['all-letters']

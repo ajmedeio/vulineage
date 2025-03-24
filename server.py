@@ -19,7 +19,8 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def _set_response(self, status_code=200, content_type='application/json'):
         self.send_response(status_code)
-        self.send_header('Content-type', content_type)
+        if content_type is not None:
+            self.send_header('Content-type', content_type)
         self.end_headers()
 
     def do_POST(self):
@@ -58,10 +59,6 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self._set_response(405, 'application/json')
         self.wfile.write(json.dumps({"error": "Method HEAD not allowed"}).encode('utf-8'))
 
-    def do_OPTIONS(self):
-        self._set_response(405, 'application/json')
-        self.wfile.write(json.dumps({"error": "Method OPTIONS not allowed"}).encode('utf-8'))
-
     def do_CONNECT(self):
         self._set_response(405, 'application/json')
         self.wfile.write(json.dumps({"error": "Method CONNECT not allowed"}).encode('utf-8'))
@@ -74,10 +71,15 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self._set_response(405, 'application/json')
         self.wfile.write(json.dumps({"error": "Method PATCH not allowed"}).encode('utf-8'))
 
+    def do_OPTIONS(self):
+        self._set_response(200, content_type=None)
+        self.wfile.write(json.dumps({"status": "ok"}).encode('utf-8'))
+
     def end_headers(self):
-        #self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
-        #self.send_header("Pragma", "no-cache")
-        #self.send_header("Expires", "0")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Credentials", "true")
+        self.send_header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST")
+        self.send_header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
         super().end_headers()
 
 with socketserver.TCPServer(("", PORT), MyHTTPRequestHandler) as httpd:
