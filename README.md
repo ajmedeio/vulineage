@@ -12,7 +12,7 @@ The following command assumes you have the `vulineage-database-ssh-key.pem` on y
 `ssh -i ~/Desktop/vulineage-database-ssh-key.pem ec2-user@ec2-204-236-197-103.compute-1.amazonaws.com`
 
 ## Copying the server.py to the database server
-`scp -i ~/Desktop/vulineage-database-ssh-key.pem ~/repos/ajmedeio/vulineage/server.py ec2-user@ec2-204-236-197-103.compute-1.amazonaws.com:/home/ec2-user`
+`scp -i ~/Desktop/vulineage-database-ssh-key.pem ~/repos/ajmedeio/vulineage/database_server.py ec2-user@ec2-204-236-197-103.compute-1.amazonaws.com:/home/ec2-user`
 
 ## Testing
 `curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"query":"select 1"}' http://ec2-204-236-197-103.compute-1.amazonaws.com:9631`
@@ -29,7 +29,7 @@ For windows user, just change the double quotes into single quotes in `curl` com
 `journalctl -u server.py.service -f`
 
 ## Architecture
-![alt text](docs/image.png)
+![Architecture diagram](docs/image.png)
 
 # Getting Started For Local Development
 To get started, we can run the frontend_server.py using `python frontend_server.py` or `python3 frontend_server.py` from your project root.

@@ -84,5 +84,5 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 with socketserver.TCPServer(("", PORT), MyHTTPRequestHandler) as httpd:
     print("Serving at port", PORT)
-    db_connection = sqlite3.connect('/database/database.db')
+    db_connection = sqlite3.connect('file:/database/database.db?mode=ro', uri=True)
     httpd.serve_forever()
