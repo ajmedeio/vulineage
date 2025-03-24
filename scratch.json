@@ -1,0 +1,56 @@
+[
+    [
+        "index",
+        "sqlite_autoindex_image_details_1",
+        "image_details",
+        null
+    ],
+    [
+        "index",
+        "sqlite_autoindex_lineage_details_1",
+        "lineage_details",
+        null
+    ],
+    [
+        "index",
+        "sqlite_autoindex_digest_to_scan_report_1",
+        "digest_to_scan_report",
+        null
+    ],
+    [
+        "index",
+        "idx_img_id_image_details",
+        "image_details",
+        "CREATE INDEX idx_img_id_image_details ON image_details (image_id)"
+    ],
+    [
+        "index",
+        "idx_lin_id",
+        "lineage_id_to_image_id",
+        "CREATE INDEX idx_lin_id ON lineage_id_to_image_id (lineage_id) "
+    ],
+    [
+        "index",
+        "idx_digest_image_details",
+        "image_details",
+        "CREATE INDEX idx_digest_image_details ON image_details (digest)"
+    ],
+    [
+        "index",
+        "digest_to_scan_report_digest_idx",
+        "digest_to_scan_report",
+        "CREATE INDEX digest_to_scan_report_digest_idx on digest_to_scan_report (digest)"
+    ],
+    [
+        "index",
+        "digest_to_vulnerability_digest_idx",
+        "digest_to_vulnerability",
+        "CREATE INDEX digest_to_vulnerability_digest_idx on digest_to_vulnerability (digest)"
+    ],
+    [
+        "index",
+        "vulnerability_record_id_idx",
+        "vulnerability_record",
+        "CREATE INDEX vulnerability_record_id_idx on vulnerability_record (id)"
+    ]
+]

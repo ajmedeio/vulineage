@@ -32,6 +32,7 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         post_data = self.rfile.read(content_length)
         try:
             body = json.loads(post_data.decode('utf-8'))
+            print("Request body received:", body)
             query = body["query"]
             rows = db_read(query)
             response_data = rows
@@ -44,10 +45,6 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         except Exception as e:
             self._set_response(500, 'application/json')
             self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
-    
-    def do_GET(self):
-        self._set_response(405, 'application/json') # Method Not Allowed
-        self.wfile.write(json.dumps({"error": "Method GET not allowed"}).encode('utf-8'))
 
     def do_PUT(self):
         self._set_response(405, 'application/json')
