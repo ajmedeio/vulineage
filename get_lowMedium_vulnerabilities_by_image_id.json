@@ -1,0 +1,3 @@
+{
+    "query": "SELECT id.digest, dtv.vulnerability_id, vr.severity FROM image_details id JOIN digest_to_vulnerability dtv ON id.digest = dtv.digest JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id WHERE (vr.severity = 'Low' or vr.severity = 'Medium') and image_id = 'sha256:00005fba3f7c106df1dcdd5753bc18ac6181d9ad0f9aaa17d59d2af76590c7ed'"
+}
