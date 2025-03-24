@@ -76,18 +76,44 @@ function updateChart(filterKey) {
         .remove()
 }
 
-(async () => {
-    const requestBody = { query: "SELECT ld.*, iil.image_id, id.committed_date FROM lineage_details ld JOIN lineage_id_to_image_id  iil ON ld.lineage_id = iil.lineage_id JOIN image_details id ON iil.image_id = id.image_id WHERE ld.lineage_id = -1000033263475935320 ORDER BY id.committed_date" }
+async function get_lineage_by_lineage_id(lineage_id) {
+    const sqlite_query = `SELECT ld.*, iil.image_id, id.committed_date
+        FROM lineage_details ld 
+            JOIN lineage_id_to_image_id iil ON ld.lineage_id = iil.lineage_id
+            JOIN image_details id ON iil.image_id = id.image_id
+        WHERE ld.lineage_id = ${lineage_id}
+        ORDER BY id.committed_date`
+    return execute_database_server_request(sqlite_query)
+}
+
+async function get_vulnerabilities_by_image_id(image_id) {
+    const sqlite_query = `SELECT id.*, dtsr.report, dtv.vulnerability_id, vr.*
+        FROM image_details id
+            JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest
+            JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest
+            JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id
+        WHERE dtsr.report IS NOT NULL 
+            AND id.image_id = '${image_id}'`
+    return execute_database_server_request(sqlite_query)
+}
+
+async function execute_database_server_request(sqlite_query) {
     let response = await fetch('http://ec2-204-236-197-103.compute-1.amazonaws.com:9631', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify({"query": sqlite_query})
     })
-    console.log(await response.json())
-    return
+    return response.json()
+}
+
+(async () => {
+    const lineage_data = await get_lineage_by_lineage_id("-1000033263475935320")
+    const vulnerability_data = await get_vulnerabilities_by_image_id('sha256:00005fba3f7c106df1dcdd5753bc18ac6181d9ad0f9aaa17d59d2af76590c7ed')
+    console.log("example lineage data", lineage_data)
+    console.log("example vulnerabilities data", vulnerability_data)
 
     csvData = await d3.csv('letter_freq.csv', dataPreprocessor)
     
