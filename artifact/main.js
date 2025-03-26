@@ -98,7 +98,7 @@ async function get_vulnerabilities_by_image_id(image_id) {
 }
 
 async function execute_database_server_request(sqlite_query) {
-    let response = await fetch('http://ec2-204-236-197-103.compute-1.amazonaws.com:9631', {
+    let response = await fetch('https://database.vulineage.com', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
