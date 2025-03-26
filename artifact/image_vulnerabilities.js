@@ -1,7 +1,7 @@
 fetchData();
 async function fetchData() {
     try {
-        const response = await fetch("http://ec2-204-236-197-103.compute-1.amazonaws.com:9631", {
+        const response = await fetch("https://database.vulineage.com", {
             method: "POST",
             headers: {
                 "Accept": "application/json",
