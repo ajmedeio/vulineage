@@ -11,33 +11,15 @@
             style-src 'self' https://maxcdn.bootstrapcdn.com 'unsafe-inline';
             img-src * data:;
     ">
-    <title>Vulnerability Lineage</title>
+    <title>Image Details</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div>
-        <a href="image_vulnerabilities.html">
-            <button>Get image vulnerabilities count by category</button>
-        </a>
-    </div>
-    <div>
-        <a href="image_details.html">
-            <button>Image details</button>
-        </a>
-    </div>
-    <!-- TODO :: Add you page via link over here -->
-
     <div id="main">
-        <svg width="300" height="600" style="border: 1px solid #777;">
-        </svg>
-        <div>
-            <label for="categorySelect">Show: </label>
-            <select class="custom-select" id="categorySelect" onchange="onCategoryChanged()">
-              <option selected value="all-letters">All Letters</option>
-              <option value="only-consonants">Only Consonants</option>
-              <option value="only-vowels">Only Vowels</option>
-            </select>
+        <div style="margin-left: 160px;">
+            <svg width="600" height="600" style="border: 1px solid #777;">
+            </svg>
         </div>
     </div>
 </body>
@@ -45,5 +27,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
-<script src="./main.js"></script>
+<script src="./image_details.js"></script>
 </html>
