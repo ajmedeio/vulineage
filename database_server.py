@@ -11,7 +11,7 @@ def db_read(query):
     cursor = db_connection.cursor()
     cursor.execute(query)
     rows = cursor.fetchall()
-    return rows
+    return [dict(row) for row in rows]
 
 class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -85,4 +85,5 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 with socketserver.TCPServer(("", PORT), MyHTTPRequestHandler) as httpd:
     print("Serving at port", PORT)
     db_connection = sqlite3.connect('file:/database/database.db?mode=ro', uri=True)
+    db_connection.row_factory = sqlite3.Row
     httpd.serve_forever()
