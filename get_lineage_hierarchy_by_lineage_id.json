@@ -1,0 +1,3 @@
+{
+    "query": "WITH RECURSIVE hierarchy AS (SELECT *, 1 AS depth FROM lineage_details ld WHERE ld.lineage_id = -1000033263475935320 UNION ALL SELECT ld.*, h.depth + 1 FROM lineage_details ld JOIN hierarchy h ON ',' || ld.parents || ',' LIKE '%,' || h.lineage_id || ',%') SELECT * FROM hierarchy ORDER BY depth"
+}

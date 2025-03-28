@@ -15,16 +15,21 @@ The following command assumes you have the `vulineage-database-ssh-key.pem` on y
 `scp -i ~/Desktop/vulineage-database-ssh-key.pem ~/repos/ajmedeio/vulineage/database_server.py ec2-user@ec2-204-236-197-103.compute-1.amazonaws.com:/home/ec2-user`
 
 ## Testing
-`curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"query":"select 1"}' http://ec2-204-236-197-103.compute-1.amazonaws.com:9631`
+
+Use the following curl command like `curl ... > input.json`
+Then using the following to get the output.csv file
+`python3 json_to_csv.py`
+
+`curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"query":"select 1"}' https://database.vulineage.com`
 
 ### get_lineage_by_lineage_id.json
-`curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d @get_lineage_by_lineage_id.json http://ec2-204-236-197-103.compute-1.amazonaws.com:9631`
+`curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d @get_lineage_by_lineage_id.json https://database.vulineage.com`
 
 ### get_vulnerabilities_by_image_id.json
-`curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d @get_vulnerabilities_by_image_id.json http://ec2-204-236-197-103.compute-1.amazonaws.com:9631`
+`curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d @get_vulnerabilities_by_image_id.json https://database.vulineage.com`
 
 ### get_lowMedium_vulnerabilities_by_image_id.json
-curl -H 'Accept: application/json' -H 'Content-type: application/json' -X POST -d @get_lowMedium_vulnerabilities_by_image_id.json http://ec2-204-236-197-103.compute-1.amazonaws.com:9631
+curl -H 'Accept: application/json' -H 'Content-type: application/json' -X POST -d @get_lowMedium_vulnerabilities_by_image_id.json https://database.vulineage.com
 
 For windows user, just change the double quotes into single quotes in `curl` commands
 
