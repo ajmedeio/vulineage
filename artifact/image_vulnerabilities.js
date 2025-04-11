@@ -8,7 +8,7 @@ async function fetchData() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "query": "SELECT ld.*, iil.image_id, id.committed_date FROM lineage_details ld JOIN lineage_id_to_image_id  iil ON ld.lineage_id = iil.lineage_id JOIN image_details id ON iil.image_id = id.image_id WHERE ld.lineage_id = -1000033263475935320 ORDER BY id.committed_date"
+                "query": "SELECT id.*, dtsr.report, dtv.vulnerability_id, vr.* FROM image_details id JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id WHERE dtsr.report IS NOT NULL AND id.image_id = 'sha256:00005fba3f7c106df1dcdd5753bc18ac6181d9ad0f9aaa17d59d2af76590c7ed'"
             })
         });
 
@@ -26,11 +26,12 @@ function dataPreprocessor(data) {
     dataset = []
     for(let i=0; i<data.length; i++) {
         row = {
-            'name': data['name'],
-            'economy (mpg)': data['economy (mpg)'],
+            'cve_id': data['cve_id'],
+            'serverity': data['serverity'],
         }
-        dataset.append(row)
+        dataset.push(row)
     }
+    return dataset;
 }
 
 function CreateChart(dataset) {
@@ -52,39 +53,11 @@ function CreateChart(dataset) {
     // Create groups for the x- and y-axes
     var xAxisG = chartG.append('g')
         .attr('class', 'x axis')
-        .attr('transform', 'translate('+[0, chartHeight]+')');
+        .attr('transform', 'translate('+[0, chartHeight]+')')
+        .call(d3.axisBottom());
     var yAxisG = chartG.append('g')
-        .attr('class', 'y axis');
-    var xScale = d3.scaleLinear().range([0, chartWidth]).domain();
-    var yScale = d3.scaleLinear().range([chartHeight, 0]).domain();
+        .attr('class', 'y axis')
+        .attr('transform', 'translate('+[90, chartWidth]+')')
+        .call(d3.axisLeft());
 
-    xAxisG.transition()
-            .duration(750)
-            .call(d3.axisBottom(xScale));
-
-    yAxisG.transition()
-            .duration(750)
-            .call(d3.axisLeft(yScale));
-
-    var dots = chartG.selectAll('.dot').data(dataset);
-
-    var dotsEnter = dots.enter()
-                    .append('g')
-                    .attr('class', 'dot');
-
-    dotsEnter.append('circle').attr('r', 3)
-    dotsEnter.append('text')
-            .attr('y', -10)
-            .text(function(d) {
-                return d.name;
-            });
-
-    dots.merge(dotsEnter)
-        .transition()
-        .duration(750)
-        .attr('transform', function(d) {
-            var tx = xScale(d[chartScales.x]);
-            var ty = yScale(d[chartScales.y]);
-            return 'translate('+[tx, ty]+')';
-        });
 }
