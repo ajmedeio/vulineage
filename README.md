@@ -33,7 +33,7 @@ curl -H 'Accept: application/json' -H 'Content-type: application/json' -X POST -
 
 For windows user, just change the double quotes into single quotes in `curl` commands
 
-## Checking Server Logs (while ssh'ed into database server)
+## Checking Server Logs (should first ssh into database server)
 `journalctl -u database_server.py.service -f`
 
 ## Architecture
