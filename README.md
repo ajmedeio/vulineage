@@ -45,3 +45,22 @@ To get started, we can run the frontend_server.py using `python frontend_server.
 Then open your browser to localhost:9731 to open the index.html found under the artifact directory.
 
 When you commit to main branch, the artifact will automatically get pushed to AWS S3 where it can be reached by the internet.
+
+## Visualization Information
+
+### Main Idea
+Network Chart
+Will create a network visualization of a few images, then these below created visualization can be called upon the seleted image id
+
+[Harshit] I am thinking of creating something like lab9, where in separate tab we can have the below mentioned visualization
+
+### Image Vulnerabilities
+Bar Chart
+This will give count of individual vulnerabilities of a given image id
+
+### Image Details
+
+### Growth of Vulnerabilities
+Line Graph
+This will give a time series of view of how vulnerabilies grew over time per image / lineage
+
