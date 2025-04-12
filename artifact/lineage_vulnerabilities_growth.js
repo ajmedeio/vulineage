@@ -8,7 +8,7 @@ async function fetchData() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "query": "SELECT Id.committed_date, vr.cve_id, vr.severity FROM lineage_details ld JOIN lineage_id_to_image_id iil ON ld.lineage_id = iil.lineage_id JOIN image_details id ON iil.image_id = id.image_id JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id WHERE ld.lineage_id = -1000033263475935320 and dtsr.report IS NOT NULL ORDER BY id.committed_date"
+                "query": "SELECT Id.committed_date, vr.cve_id, vr.severity FROM lineage_details ld JOIN lineage_id_to_image_id iil ON ld.lineage_id = iil.lineage_id JOIN image_details id ON iil.image_id = id.image_id JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id WHERE ld.lineage_id = 5110799188545663389 and dtsr.report IS NOT NULL ORDER BY id.committed_date"
             })
         });
 
