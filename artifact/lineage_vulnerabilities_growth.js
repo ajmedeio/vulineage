@@ -8,7 +8,7 @@ async function fetchData() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "query": "SELECT vr.cve_id, vr.severity FROM image_details id JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id WHERE dtsr.report IS NOT NULL AND id.image_id = 'sha256:00005fba3f7c106df1dcdd5753bc18ac6181d9ad0f9aaa17d59d2af76590c7ed'"
+                "query": "SELECT Id.committed_date, vr.cve_id, vr.severity FROM lineage_details ld JOIN lineage_id_to_image_id iil ON ld.lineage_id = iil.lineage_id JOIN image_details id ON iil.image_id = id.image_id JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id WHERE ld.lineage_id = -1000033263475935320 and dtsr.report IS NOT NULL ORDER BY id.committed_date"
             })
         });
 
@@ -24,18 +24,36 @@ async function fetchData() {
 // Use this function to do any preprocessing on returned data
 function dataPreprocessor(data) {
     const severityLevels = ["Low", "Medium", "High", "Critical", "Unknown"];
-    const severityCounts = {};
+    const grouped = {};
 
-    severityLevels.forEach(level => {
-        severityCounts[level] = data.filter(d => d.severity === level).length;
+    data.forEach(d => {
+        const date = new Date(d.committed_date * 1000).toDateString(); // Unix date
+        const severity = d.severity;
+
+        if (!grouped[date]) {
+            grouped[date] = {};
+        }
+        if (!grouped[date][severity]) {
+            grouped[date][severity] = 0;
+        }
+        grouped[date][severity]++;
     });
 
-    // Convert counts to array for D3
-    var dataset = severityLevels.map(level => ({
-        severity: level,
-        count: severityCounts[level]
-    }));
-    console.log("Processed Data: ", dataset)
+    const dataset = severityLevels.map(severity => {
+        const values = Object.keys(grouped).map(date => {
+            return {
+                date: new Date(date),
+                count: grouped[date][severity] || 0
+            };
+        }).sort((a, b) => a.date - b.date);
+
+        return {
+            severity: severity,
+            values: values
+        };
+    });
+
+    console.log("Processed Data: ", dataset);
     return dataset;
 }
 
@@ -56,19 +74,19 @@ function CreateChart(data) {
         .attr('transform', 'translate('+[padding.l, padding.t]+')');
 
     // Create groups for the x- and y-axes
-    var xScale = d3.scaleBand()
-        .domain(data.map(d => d.severity))
-        .range([0, chartWidth])
-        .padding(0.6);
+    const allPoints = data.flatMap(d => d.values);
+    var xScale = d3.scaleTime()
+        .domain(d3.extent(allPoints, d => d.date))
+        .range([0, chartWidth]);
 
     var yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.count)])
+        .domain([0, d3.max(allPoints, d => d.count)])
         .range([chartHeight, 0]);
 
     chartG.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate('+[0, chartHeight]+')')
-        .call(d3.axisBottom(xScale));
+        .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat('%b %d')));
     chartG.append('g')
         .attr('class', 'y axis')
         .call(d3.axisLeft(yScale));
@@ -84,27 +102,28 @@ function CreateChart(data) {
 
     // Line generator
     var line = d3.line()
-        .x(d => xScale(d.severity))
+        .x(d => xScale(d.date))
         .y(d => yScale(d.count));
 
-    // Draw the line
-    chartG.append('path')
-        .datum(data)
-        .attr('fill', 'none')
-        .attr('stroke', '#007ACC')
-        .attr('stroke-width', 2)
-        .attr('d', line);
+    data.forEach(severityGroup => {
+        // Draw the line
+        chartG.append('path')
+            .datum(severityGroup.values)
+            .attr('fill', 'none')
+            .attr('stroke', severityColors[severityGroup.severity])
+            .attr('stroke-width', 2)
+            .attr('d', line);
 
-    // Add labels
-    chartG.selectAll('.label')
-        .data(data)
-        .enter()
-        .append('text')
-        .attr('x', d => xScale(d.severity))
-        .attr('y', d => yScale(d.count) - 10)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '24px')
-        .attr('fill', '#333');
+        // Add labels at end of line
+        const last = severityGroup.values[severityGroup.values.length - 1];
+        chartG.append('text')
+            .attr('x', xScale(last.date) + 5)
+            .attr('y', yScale(last.count))
+            .text(severityGroup.severity)
+            .attr('fill', severityColors[severityGroup.severity])
+            .attr('font-size', '12px')
+            .attr('alignment-baseline', 'middle');
+    });
     
     chartG.append('text')
         .attr('class', 'y axis-label')
