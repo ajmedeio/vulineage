@@ -54,6 +54,8 @@ Will create a network visualization of a few images, then these below created vi
 
 [Harshit] I am thinking of creating something like lab9, where in separate tab we can have the below mentioned visualization
 
+### Network, just like lab 8
+
 ### Image Vulnerabilities
 Bar Chart
 This will give count of individual vulnerabilities of a given image id
