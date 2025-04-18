@@ -9,9 +9,24 @@ var padding = {t: 40, r: 40, b: 40, l: 40};
 var width = svgWidth - padding.l - padding.r;
 var height = svgHeight - padding.t - padding.b;
 
+var colorScale = d3.scaleOrdinal(d3.schemeTableau10);
+var linkScale = d3.scaleSqrt().range([1,10]);
+
 fetchData();
 async function fetchData() {
-    try {
+    var nodes = new Set(), links = new Set();
+    var stack = [{"id": "-1000033263475935320", "group":0}]; // group is just level wrt start
+    while(stack.length != 0) {
+        const s = stack.pop();
+        nodes.add(s);
+        const parent = s.id;
+        const level = s.group;
+
+        if(level == 10)
+            continue; // prune the network
+        if(parent == "")
+            break;
+
         const response = await fetch("https://database.vulineage.com", {
             method: "POST",
             headers: {
@@ -19,43 +34,35 @@ async function fetchData() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "query": "--MUCH NEEDED--"
+                "query": `SELECT ld.lineage_id, ld.parents FROM lineage_details ld WHERE ld.lineage_id = ${parent}`
             })
         });
 
-        dataset = await response.json();
-        console.log("Fetched Data: ", dataset);
-        dataset = dataPreprocessor(dataset);
-        CreateChart(dataset);
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    }
-};
+        data = await response.json();
+        console.log(`Fetched Data at level ${level} is:`, data);
 
-// Use this function to do any preprocessing on returned data
-function dataPreprocessor(data) {
-// Need the data to look something like this 
-// id ~ lineage_id / image_id
-// group = 0 if lineage_id
-// group = 1 if image_id so we can later color them
+        var parents = JSON.parse(data[0].parents.replace(/'/g, '"'));
+        for(var i=0; i<parents.length; i++) {
+            stack.push({"id" : parents[i], "group" : level + 1});
+            links.add({"source": parent, "target": parents[i], "value": level + 1});
+        }
+    }
+
+    dataset = {"nodes": nodes, "links": links};
+    console.log("Processed Data: ", dataset);
+    CreateChart(dataset);
+};
 /*
+Need the data to look something like this 
+id ~ lineage_id / image_id
+group = 0 if lineage_id else image_id; so we can later color them
 {
 "nodes": [
-    {"id": "Myriel", "group": 1},
-    {"id": "Napoleon", "group": 1},
-    ...
-    ],
+    {"id": "Myriel", "group": 0}, ...],
 "links": [
-    {"source": "Napoleon", "target": "Myriel", "value": 1},
-    {"source": "Mlle.Baptistine", "target": "Myriel", "value": 8},
-    ...
-    ]
+    {"source": "Napoleon", "target": "Myriel", "value": 1}, ...]
 }
 */
-
-    console.log("Processed Data: ", dataset);
-    return dataset;
-}
 
 function CreateChart(network) {
     linkScale.domain(d3.extent(network.links, function(d){ return d.value;}));

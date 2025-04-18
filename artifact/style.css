@@ -4,6 +4,19 @@
     font-weight: semibold;
 }
 
+.link {
+    stroke: #ccc;
+  }
+  
+  .node {
+    stroke: #999;
+    stroke-width: 1;
+  }
+  
+  .node:hover {
+    stroke-width: 2;
+  }
+
 body {
     font-family: "Open Sans";
     margin: 0;
