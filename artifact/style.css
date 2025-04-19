@@ -1,27 +1,47 @@
-.axis-label {
-    text-anchor: middle;
-    font-size: 12px;
-    font-weight: semibold;
+:root {
+  --content-color: white;
+  --background-color: #1A1A1A;
+}
+
+.axis {
+  color: var(--content-color);
+  text-anchor: middle;
+  font-size: 12px;
+  font-weight: semibold;
+}
+
+.letter {
+  color: var(--content-color);
+}
+
+.text {
+  fill: var(--content-color);
+}
+
+.label {
+  fill: var(--content-color);
 }
 
 .link {
-    stroke: #ccc;
-  }
-  
-  .node {
-    stroke: #999;
-    stroke-width: 1;
-  }
-  
-  .node:hover {
-    stroke-width: 2;
-  }
+  stroke: #ccc;
+}
+
+.node {
+  stroke: #999;
+  stroke-width: 1;
+}
+
+.node:hover {
+  stroke-width: 2;
+}
 
 body {
-    font-family: "Open Sans";
-    margin: 0;
+  font-family: "Open Sans";
+  margin: 0;
+  background-color: var(--background-color);
 }
 
 #main {
-    margin: 20px;
+  color: var(--content-color);
+  margin: 20px;
 }

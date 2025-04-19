@@ -63,12 +63,13 @@ function updateChart(filterKey) {
         
     letterEnter.append('text')
         .attr('transform', (d, i) => `translate(-16, ${barHeight})`)
+        .classed('text', true)
         .text(d => d.letter)
     letterEnter.append('rect')
         .attr('transform', (d, i) => `translate(0, 0)`)
         .attr('width', (d) => xScale(+d.frequency * 100))
         .attr('height', barHeight)
-        .attr('fill', 'black')
+        .attr('fill', 'white')
 
     const letterExit = chartG.selectAll(".letter")
         .data(filteredData, function(d) {return d.letter})
