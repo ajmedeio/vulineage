@@ -1,0 +1,5 @@
+[Unit]
+Description=Let's Encrypt renewal
+
+[Service]
+ExecStart=/opt/certbot/bin/certbot renew -q --post-hook "systemctl reload nginx.service"
