@@ -14,13 +14,16 @@ var linkScale = d3.scaleSqrt().range([1,10]);
 
 fetchData();
 async function fetchData() {
-    var nodes = new Set(), links = new Set();
+    var nodes = [], links = [], linkSet = new Set(), nodeSet = new Set();
     var stack = [{"id": "-1000033263475935320", "group":0}]; // group is just level wrt start
     while(stack.length != 0) {
         const s = stack.pop();
-        nodes.add(s);
         const parent = s.id;
         const level = s.group;
+        if(!nodeSet.has(parent)) {
+            nodes.push(s);
+            nodeSet.add(parent);
+        }
 
         if(level == 10)
             continue; // prune the network
@@ -44,7 +47,12 @@ async function fetchData() {
         var parents = JSON.parse(data[0].parents.replace(/'/g, '"'));
         for(var i=0; i<parents.length; i++) {
             stack.push({"id" : parents[i], "group" : level + 1});
-            links.add({"source": parent, "target": parents[i], "value": level + 1});
+
+            const lkey = `${parent}->${parents[i]}`;
+            if(!linkSet.has(lkey)) {
+                linkSet.add(lkey)
+                links.push({"source": parent, "target": parents[i], "value": 1});
+            }
         }
     }
 
