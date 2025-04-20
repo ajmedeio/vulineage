@@ -1,0 +1,17 @@
+{
+    "query":
+    "
+    SELECT 
+        id.image_id AS source,
+        vr.cve_id AS target
+    FROM 
+        digest_to_vulnerability dtv
+    JOIN 
+        image_details id ON dtv.digest = id.digest
+    JOIN 
+        vulnerability_record vr ON dtv.vulnerability_id = vr.id
+    ORDER BY 
+        id.image_id
+    LIMIT 10;
+    "
+}
