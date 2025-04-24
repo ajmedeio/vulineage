@@ -1,0 +1,3 @@
+{
+    "query": "SELECT lineage_id, LENGTH(childs) - LENGTH(REPLACE(childs, ',', '')) + 1 AS num_childs FROM lineage_details WHERE childs IS NOT NULL AND TRIM(childs) != '' ORDER BY num_childs DESC LIMIT 10;"
+}

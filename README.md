@@ -32,11 +32,8 @@ Then using the following to get the output.csv file
 ### get_lineage_by_lineage_id.json
 `curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d @get_lineage_by_lineage_id.json https://database.vulineage.com`
 
-### get_vulnerabilities_by_image_id.json
-`curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d @get_vulnerabilities_by_image_id.json https://database.vulineage.com`
-
-### get_lowMedium_vulnerabilities_by_image_id.json
-curl -H 'Accept: application/json' -H 'Content-type: application/json' -X POST -d @get_lowMedium_vulnerabilities_by_image_id.json https://database.vulineage.com
+### get_root_lineages.json
+`curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d @get_root_lineages.json https://database.vulineage.com`
 
 For windows user, just change the double quotes into single quotes in `curl` commands
 
