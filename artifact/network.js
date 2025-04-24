@@ -14,21 +14,13 @@ var linkScale = d3.scaleSqrt().range([1,10]);
 
 fetchData();
 async function fetchData() {
-    var nodes = [], links = [], linkSet = new Set(), nodeSet = new Set();
-    var stack = [{"id": "-1000033263475935320", "group":0}]; // group is just level wrt start
+    var nodeMap = new Map(), linkMap = new Map();
+    var stack = [{"id": "7038950296606474977", "parent":"-1", "parent_level":-1}];
     while(stack.length != 0) {
         const s = stack.pop();
-        const parent = s.id;
-        const level = s.group;
-        if(!nodeSet.has(parent)) {
-            nodes.push(s);
-            nodeSet.add(parent);
-        }
-
-        if(level == 10)
-            continue; // prune the network
-        if(parent == "")
-            break;
+        const curr = s.id;
+        const parent = s.parent;
+        const parent_level = s.parent_level;
 
         const response = await fetch("https://database.vulineage.com", {
             method: "POST",
@@ -37,25 +29,37 @@ async function fetchData() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "query": `SELECT ld.lineage_id, ld.parents FROM lineage_details ld WHERE ld.lineage_id = ${parent}`
+                "query": `SELECT ld.lineage_id, ld.childs, ld.parents FROM lineage_details ld WHERE ld.lineage_id = ${curr}`
             })
         });
-
         data = await response.json();
-        console.log(`Fetched Data at level ${level} is:`, data);
 
-        var parents = JSON.parse(data[0].parents.replace(/'/g, '"'));
-        for(var i=0; i<parents.length; i++) {
-            stack.push({"id" : parents[i], "group" : level + 1});
+        var childs = JSON.parse(data[0].childs.replace(/'/g, '"'));
+        var new_parents = JSON.parse(data[0].parents.replace(/'/g, '"'));
+        console.log(`Fetched Data at level ${new_parents.length} is:`, data[0]);
 
-            const lkey = `${parent}->${parents[i]}`;
-            if(!linkSet.has(lkey)) {
-                linkSet.add(lkey)
-                links.push({"source": parent, "target": parents[i], "value": 1});
-            }
+        // The idea of child.parent = parent.parent + 1 didn't worked out and each child lineage had more more than 2 parents
+        // If curr node is achieved by new_parents.length more than earlier then we will update linkMap,
+        // as it means it have been now reached by a closer grandparent than earlier; eventually by actual parent
+        // Dijkstra kinda idea
+        if(parent != "-1" && (nodeMap.get(curr)==undefined || nodeMap.get(curr) <= parent_level+1))
+            linkMap.set(curr, parent);
+        else if(nodeMap.get(curr)!=undefined && nodeMap.get(curr) > parent_level+1)
+            continue; // already got to "curr" node by better/closer grandparent
+        nodeMap.set(curr, parent_level+1);
+
+        for(var i=0; i<childs.length; i++) {
+            stack.push({"id": childs[i], "parent": curr, "parent_level":parent_level+1});
         }
     }
 
+    var nodes=[], links=[];
+    for(const [u, v] of linkMap) {
+        links.push({"source": u, "target": v, "value": 1});
+    }
+    for(const [u, v] of nodeMap) {
+        nodes.push({"id": u, "group": v})
+    }
     dataset = {"nodes": nodes, "links": links};
     console.log("Processed Data: ", dataset);
     CreateChart(dataset);
@@ -97,7 +101,7 @@ function CreateChart(network) {
         .attr('class', 'node')
         .attr('r', 6)
         .style('fill', function(d) {
-            return colorScale(d.group);
+            return colorScale(d.level);
         });
     
     simulation
