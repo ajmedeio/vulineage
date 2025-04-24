@@ -25,7 +25,7 @@ The following command assumes you have the `vulineage-database-ssh-key.pem` on y
 
 Use the following curl command like `curl ... > input.json`
 Then using the following to get the output.csv file
-`python3 helper/json_to_csv.py`
+`python3 scripts/json_to_csv.py`
 
 `curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"query":"select 1"}' https://database.vulineage.com`
 
