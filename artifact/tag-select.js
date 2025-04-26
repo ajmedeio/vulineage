@@ -27,15 +27,9 @@ async function refreshTagSelect(repository) {
         AND ld.parents = '[]'
         ORDER BY ld.last_instance_commit_date DESC
     `;
-    const rootLineages = await fetch('https://database.vulineage.com', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ query })
-    }).then(response => response.json());
-    console.log('Fetched Root Lineages:', rootLineages);
+    console.log('Fetching root lineages...');
+    const rootLineages = await execute_database_server_request(query);
+    console.log('Fetched root lineages.');
     tags = new Map();
     rootLineages.forEach(lineage => {
         lineage.tags = JSON.parse(lineage.tags.replace(/'/g, '"'));
@@ -44,7 +38,6 @@ async function refreshTagSelect(repository) {
             tags.set(tag, lineage);
         });
     });
-    console.log('Fetched Tags:', tags);
 
     const tagSelect = d3.select('#tag-select');
     tagSelect.selectAll('option').remove(); // Clear previous options
@@ -65,6 +58,6 @@ async function refreshTagSelect(repository) {
 
 window.addEventListener('repositorySelected', function(event) {
     const selectedRepositories = event.detail;
-    console.log(event, selectedRepositories)
+    console.log("repositorySelected", { event, selectedRepositories })
     refreshTagSelect(selectedRepositories[0]);
 });

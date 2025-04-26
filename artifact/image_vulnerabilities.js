@@ -1,7 +1,7 @@
 fetchData();
 async function fetchData() {
     try {
-        const response = await fetch("https://database.vulineage.com", {
+        const response = await fetch(window.databaseUrl, {
             method: "POST",
             headers: {
                 "Accept": "application/json",
@@ -13,7 +13,7 @@ async function fetchData() {
         });
 
         dataset = await response.json();
-        console.log("Fetched Data: ", dataset);
+        console.log("Fetched Data: ", { dataset });
         dataset = dataPreprocessor(dataset);
         CreateChart(dataset);
     } catch (error) {

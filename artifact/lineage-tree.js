@@ -9,12 +9,11 @@ async function initLineageTree(root) {
     // Rows are separated by dx pixels, columns by dy pixels. These names can be counter-intuitive
     // (dx is a height, and dy a width). This because the tree must be viewed with the root at the
     // “bottom”, in the data domain. The width of a column is based on the tree’s height.
-    console.log(root)
     const maxVulnerabilityCount = d3.max(root.descendants(), d => d.data.vulnerabilityCount)
     const dx = 32//(width - marginRight - marginLeft) / (1 + root.height);
 
     // Define the tree layout and the shape for links.
-    const tree = d3.tree().nodeSize([8, 16]);
+    const tree = d3.tree().nodeSize([16, 24]);
     const diagonal = d3.linkVertical().x(d => d.x).y(d => d.y);
 
     // Create the SVG container, a layer for the links and a layer for the nodes.
@@ -91,7 +90,8 @@ async function initLineageTree(root) {
         nodeEnter.append("circle")
             .attr("r", 6)
             .attr("opacity", 0.95)
-            .attr("fill", d => { a = interpolateRdYlGn((d.data["vulnerabilityCount"] / maxVulnerabilityCount)); return a })
+            .attr('fill', '#FFF')
+            //.attr("fill", d => { a = interpolateRdYlGn((d.data["vulnerabilityCount"] / maxVulnerabilityCount)); return a })
             .attr("stroke", d => { a = interpolateRdYlGn((d.data["vulnerabilityCount"] / maxVulnerabilityCount) + .08); return a })
             .attr("stroke-width", 1)
             .on("mouseover", function (event, d) {
@@ -204,15 +204,11 @@ async function fetchLineageTreeAsStratifyRoot(lineage_id) {
         }
     }
 
-    // Prepare nodes and links
-    const nodes = [];
     const links = [];
     for (const [u, v] of linkMap) {
         links.push({ source: u, target: v, value: 1 });
     }
     links.push({ source: links[links.length-1].target, target: null, value: 1 }); // Ensure root node has parentId null
-    
-    console.log("Processed Data: ", links);
       
     const stratifyLinks = d3.stratify()
         .id(d => d.source)
@@ -224,11 +220,9 @@ async function fetchLineageTreeAsStratifyRoot(lineage_id) {
 
 // main
 window.addEventListener('tagSelected', function (event) {
-    console.log(event)
     const selectedTag = event.detail;
-    console.log('Selected Tag:', selectedTag);
     fetchLineageTreeAsStratifyRoot(selectedTag).then(root => {
-        console.log('Fetched Lineage Tree:', root);
+        console.log('Fetched Lineage Tree:', { root });
         initLineageTree(root);
     });
 });

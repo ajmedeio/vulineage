@@ -1,5 +1,5 @@
 async function execute_database_server_request(sqlite_query) {
-    let response = await fetch('https://database.vulineage.com', {
+    let response = await fetch(window.databaseUrl, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -13,3 +13,6 @@ async function execute_database_server_request(sqlite_query) {
 (async () => {
     
 })();
+
+window.databaseUrl = "https://database.vulineage.com"
+//window.databaseUrl = "http://localhost:9631"
