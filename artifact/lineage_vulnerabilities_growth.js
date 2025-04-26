@@ -1,19 +1,18 @@
-fetchLineageVulnerabilitiesGrowth();
-async function fetchLineageVulnerabilitiesGrowth() {
+async function fetchLineageVulnerabilitiesGrowth(lineage_id) {
     try {
-        const response = await fetch(window.databaseUrl, {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "query": "SELECT Id.committed_date, vr.cve_id, vr.severity FROM lineage_details ld JOIN lineage_id_to_image_id iil ON ld.lineage_id = iil.lineage_id JOIN image_details id ON iil.image_id = id.image_id JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id WHERE ld.lineage_id = 5279765898129407635 and dtsr.report IS NOT NULL ORDER BY id.committed_date"
-            })
-        });
-
-        dataset = await response.json();
-        console.log("Fetched Data: ", { dataset });
+        console.log("Fetching Lineage Vulnerabilities Over Time...");
+        let dataset = await execute_database_server_request(`
+            SELECT Id.committed_date, vr.cve_id, vr.severity 
+            FROM lineage_details ld 
+                JOIN lineage_id_to_image_id iil ON ld.lineage_id = iil.lineage_id 
+                JOIN image_details id ON iil.image_id = id.image_id 
+                JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest 
+                JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest 
+                JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id 
+            WHERE ld.lineage_id = ${lineage_id} and dtsr.report IS NOT NULL
+            ORDER BY id.committed_date
+        `)
+        console.log("Fetched Lineage Vulnerabilities Over Time: ", { dataset });
         dataset = lineageVulnerabilitiesGrowthDataPreprocessor(dataset);
         CreateLineageVulnerabilitiesGrowthChart(dataset);
     } catch (error) {
@@ -58,13 +57,13 @@ function lineageVulnerabilitiesGrowthDataPreprocessor(data) {
 }
 
 function CreateLineageVulnerabilitiesGrowthChart(data) {
+    const svg = d3.select("#lineage-vulnerabilities-container > svg");
+    svg.selectAll('*').remove()
+
     // Get layout parameters
     const svgWidth = 500;
     const svgHeight = 400;
     const padding = { t: 40, r: 40, b: 40, l: 40 };
-    
-    const svg = d3.select("#lineage-vulnerabilities-container > svg");
-    console.log("SVG: ", svg);
     svg.attr('width', svgWidth);
     svg.attr('height', svgHeight);
 
@@ -139,3 +138,7 @@ function CreateLineageVulnerabilitiesGrowthChart(data) {
         .attr('font-size', '24px')
         .text('Count');
 }
+
+window.addEventListener('lineageClicked', (event) => {
+    fetchLineageVulnerabilitiesGrowth(event.detail.lineage_id_clicked);
+})

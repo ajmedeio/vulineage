@@ -20,9 +20,7 @@ async function initLineageTree(root) {
     const svg = d3.select("#lineage-tree-container > svg")
     svg.selectAll('*').remove()
 
-    svg.attr("width", width)
-        //.attr("height", dx)
-        .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif; user-select: none;");
+    svg.attr("style", "width: 650px; height: auto; font: 10px sans-serif; user-select: none;");
 
     const gLink = svg.append("g")
         .attr("fill", "none")
@@ -62,9 +60,10 @@ async function initLineageTree(root) {
             .attr("height", height)
             .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
 
-        // Update the nodes…
         const node = gNode.selectAll("g")
             .data(nodes, d => d.id);
+        const link = gLink.selectAll("path")
+            .data(links, d => d.target.id);
 
         // Enter any new nodes at the parent's previous position.
         const nodeEnter = node.enter().append("g")
@@ -72,10 +71,12 @@ async function initLineageTree(root) {
             .attr("fill-opacity", 0)
             .attr("stroke-opacity", 0)
             .on("click", (event, d) => {
-                d.children = d.children ? null : d._children;
-                update(event, d);
+                console.log("Lineage Clicked:", {event, d})
+                let lineage_id_clicked = d.data.source
+                window.dispatchEvent(new CustomEvent('lineageClicked', {
+                    detail: { lineage_id_clicked }
+                }))
             });
-
 
         nodeEnter.append("text")
             .attr("dx", "0.31em")
@@ -105,22 +106,6 @@ async function initLineageTree(root) {
                 d3.select(this).attr("opacity", 0.95);
             });
 
-        // Transition nodes to their new position.
-        const nodeUpdate = node.merge(nodeEnter).transition(transition)
-            .attr("transform", d => `translate(${d.x},${d.y})`)
-            .attr("fill-opacity", 1)
-            .attr("stroke-opacity", 1);
-
-        // Transition exiting nodes to the parent's new position.
-        const nodeExit = node.exit().transition(transition).remove()
-            .attr("transform", d => `translate(${source.x},${source.y})`)
-            .attr("fill-opacity", 0)
-            .attr("stroke-opacity", 0);
-
-        // Update the links…
-        const link = gLink.selectAll("path")
-            .data(links, d => d.target.id);
-
         // Enter any new links at the parent's previous position.
         const linkEnter = link.enter().append("path")
             .attr("d", d => {
@@ -128,16 +113,15 @@ async function initLineageTree(root) {
                 return diagonal({ source: o, target: o });
             });
 
+        // Transition nodes to their new position.
+        const nodeUpdate = node.merge(nodeEnter).transition(transition)
+            .attr("transform", d => `translate(${d.x},${d.y})`)
+            .attr("fill-opacity", 1)
+            .attr("stroke-opacity", 1);
+
         // Transition links to their new position.
         link.merge(linkEnter).transition(transition)
             .attr("d", diagonal);
-
-        // Transition exiting nodes to the parent's new position.
-        link.exit().transition(transition).remove()
-            .attr("d", d => {
-                const o = { x: source.x, y: source.y };
-                return diagonal({ source: o, target: o });
-            });
 
         // Stash the old positions for transition.
         root.eachBefore(d => {
