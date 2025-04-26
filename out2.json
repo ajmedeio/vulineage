@@ -1,0 +1,992 @@
+[
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 5405,
+        "cve_id": "CVE-2017-17512",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 7659,
+        "cve_id": "CVE-2019-9924",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 7662,
+        "cve_id": "CVE-2019-5094",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 7663,
+        "cve_id": "CVE-2019-5188",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 7664,
+        "cve_id": "CVE-2019-5094",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 7665,
+        "cve_id": "CVE-2019-5188",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 7970,
+        "cve_id": "CVE-2019-12900",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 7971,
+        "cve_id": "CVE-2016-3189",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 8003,
+        "cve_id": "CVE-2019-5094",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 8004,
+        "cve_id": "CVE-2019-5188",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 8015,
+        "cve_id": "CVE-2019-8457",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 8521,
+        "cve_id": "CVE-2019-9893",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 8558,
+        "cve_id": "CVE-2019-5094",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 8559,
+        "cve_id": "CVE-2019-5188",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 8981,
+        "cve_id": "CVE-2018-20482",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 8982,
+        "cve_id": "CVE-2019-9923",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 9010,
+        "cve_id": "CVE-2016-9840",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 9011,
+        "cve_id": "CVE-2016-9841",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 9012,
+        "cve_id": "CVE-2016-9842",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 9013,
+        "cve_id": "CVE-2016-9843",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 91519,
+        "cve_id": "CVE-2017-7526",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 91520,
+        "cve_id": "CVE-2018-12020",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 91521,
+        "cve_id": "CVE-2017-7526",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 91522,
+        "cve_id": "CVE-2018-12020",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 93763,
+        "cve_id": "CVE-2018-1122",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 93764,
+        "cve_id": "CVE-2018-1123",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 93765,
+        "cve_id": "CVE-2018-1124",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 93766,
+        "cve_id": "CVE-2018-1125",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 93767,
+        "cve_id": "CVE-2018-1126",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 94847,
+        "cve_id": "CVE-2018-1122",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 94848,
+        "cve_id": "CVE-2018-1123",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 94849,
+        "cve_id": "CVE-2018-1124",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 94850,
+        "cve_id": "CVE-2018-1125",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 94851,
+        "cve_id": "CVE-2018-1126",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99538,
+        "cve_id": "CVE-2018-1000001",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99539,
+        "cve_id": "CVE-2017-18269",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99540,
+        "cve_id": "CVE-2018-11236",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99541,
+        "cve_id": "CVE-2018-11237",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99542,
+        "cve_id": "CVE-2018-6485",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99543,
+        "cve_id": "CVE-2020-1751",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99544,
+        "cve_id": "CVE-2009-5155",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99545,
+        "cve_id": "CVE-2017-1000408",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99546,
+        "cve_id": "CVE-2017-1000409",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99547,
+        "cve_id": "CVE-2017-12133",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99548,
+        "cve_id": "CVE-2017-15670",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99549,
+        "cve_id": "CVE-2017-15804",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99550,
+        "cve_id": "CVE-2017-16997",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99551,
+        "cve_id": "CVE-2019-19126",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99552,
+        "cve_id": "CVE-2019-9169",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99553,
+        "cve_id": "CVE-2020-10029",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99554,
+        "cve_id": "CVE-2020-1752",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99555,
+        "cve_id": "CVE-2020-6096",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99556,
+        "cve_id": "CVE-2018-1000001",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99557,
+        "cve_id": "CVE-2017-18269",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99558,
+        "cve_id": "CVE-2018-11236",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99559,
+        "cve_id": "CVE-2018-11237",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99560,
+        "cve_id": "CVE-2018-6485",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99561,
+        "cve_id": "CVE-2020-1751",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99562,
+        "cve_id": "CVE-2009-5155",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99563,
+        "cve_id": "CVE-2017-1000408",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99564,
+        "cve_id": "CVE-2017-1000409",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99565,
+        "cve_id": "CVE-2017-12133",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99566,
+        "cve_id": "CVE-2017-15670",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99567,
+        "cve_id": "CVE-2017-15804",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99568,
+        "cve_id": "CVE-2017-16997",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99569,
+        "cve_id": "CVE-2019-19126",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99570,
+        "cve_id": "CVE-2019-9169",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99571,
+        "cve_id": "CVE-2020-10029",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99572,
+        "cve_id": "CVE-2020-1752",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 99573,
+        "cve_id": "CVE-2020-6096",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100626,
+        "cve_id": "CVE-2018-1000001",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100627,
+        "cve_id": "CVE-2017-18269",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100628,
+        "cve_id": "CVE-2018-11236",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100629,
+        "cve_id": "CVE-2018-11237",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100630,
+        "cve_id": "CVE-2018-6485",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100631,
+        "cve_id": "CVE-2020-1751",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100632,
+        "cve_id": "CVE-2009-5155",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100633,
+        "cve_id": "CVE-2017-1000408",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100634,
+        "cve_id": "CVE-2017-1000409",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100635,
+        "cve_id": "CVE-2017-12133",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100636,
+        "cve_id": "CVE-2017-15670",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100637,
+        "cve_id": "CVE-2017-15804",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100638,
+        "cve_id": "CVE-2017-16997",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100639,
+        "cve_id": "CVE-2019-19126",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100640,
+        "cve_id": "CVE-2019-9169",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100641,
+        "cve_id": "CVE-2020-10029",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100642,
+        "cve_id": "CVE-2020-1752",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 100643,
+        "cve_id": "CVE-2020-6096",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 101347,
+        "cve_id": "CVE-2019-3462",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 101348,
+        "cve_id": "CVE-2020-27350",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 101349,
+        "cve_id": "CVE-2020-3810",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 101920,
+        "cve_id": "CVE-2019-3462",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 101921,
+        "cve_id": "CVE-2020-27350",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 101922,
+        "cve_id": "CVE-2020-3810",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 101923,
+        "cve_id": "CVE-2019-13627",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 101924,
+        "cve_id": "CVE-2018-0495",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106229,
+        "cve_id": "CVE-2018-12015",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106230,
+        "cve_id": "CVE-2018-18311",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106231,
+        "cve_id": "CVE-2018-18312",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106232,
+        "cve_id": "CVE-2018-18313",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106233,
+        "cve_id": "CVE-2018-18314",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106234,
+        "cve_id": "CVE-2018-6797",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106235,
+        "cve_id": "CVE-2018-6798",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106236,
+        "cve_id": "CVE-2018-6913",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106237,
+        "cve_id": "CVE-2016-6185",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106238,
+        "cve_id": "CVE-2017-6512",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106239,
+        "cve_id": "CVE-2020-10543",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106240,
+        "cve_id": "CVE-2020-10878",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 106241,
+        "cve_id": "CVE-2020-12723",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227545,
+        "cve_id": "CVE-2018-16864",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227546,
+        "cve_id": "CVE-2018-16865",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227547,
+        "cve_id": "CVE-2017-15908",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227548,
+        "cve_id": "CVE-2018-1049",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227549,
+        "cve_id": "CVE-2018-15686",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227550,
+        "cve_id": "CVE-2018-15687",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227551,
+        "cve_id": "CVE-2018-15688",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227552,
+        "cve_id": "CVE-2018-16866",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227553,
+        "cve_id": "CVE-2018-6954",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227554,
+        "cve_id": "CVE-2019-3842",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227555,
+        "cve_id": "CVE-2019-6454",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227556,
+        "cve_id": "CVE-2020-1712",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227557,
+        "cve_id": "CVE-2018-16888",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227558,
+        "cve_id": "CVE-2019-20386",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227559,
+        "cve_id": "CVE-2018-16864",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227560,
+        "cve_id": "CVE-2018-16865",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227561,
+        "cve_id": "CVE-2017-15908",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227562,
+        "cve_id": "CVE-2018-1049",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227563,
+        "cve_id": "CVE-2018-15686",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227564,
+        "cve_id": "CVE-2018-15687",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227565,
+        "cve_id": "CVE-2018-15688",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227566,
+        "cve_id": "CVE-2018-16866",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227567,
+        "cve_id": "CVE-2018-6954",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227568,
+        "cve_id": "CVE-2019-3842",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227569,
+        "cve_id": "CVE-2019-6454",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227570,
+        "cve_id": "CVE-2020-1712",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227571,
+        "cve_id": "CVE-2018-16888",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227572,
+        "cve_id": "CVE-2019-20386",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227573,
+        "cve_id": "CVE-2018-16864",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227574,
+        "cve_id": "CVE-2018-16865",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227575,
+        "cve_id": "CVE-2017-15908",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227576,
+        "cve_id": "CVE-2018-1049",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227577,
+        "cve_id": "CVE-2018-15686",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227578,
+        "cve_id": "CVE-2018-15687",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227579,
+        "cve_id": "CVE-2018-15688",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227580,
+        "cve_id": "CVE-2018-16866",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227581,
+        "cve_id": "CVE-2018-6954",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227582,
+        "cve_id": "CVE-2019-3842",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227583,
+        "cve_id": "CVE-2019-6454",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227584,
+        "cve_id": "CVE-2020-1712",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227585,
+        "cve_id": "CVE-2018-16888",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227586,
+        "cve_id": "CVE-2019-20386",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227587,
+        "cve_id": "CVE-2018-16864",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227588,
+        "cve_id": "CVE-2018-16865",
+        "severity": "High"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227589,
+        "cve_id": "CVE-2017-15908",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227590,
+        "cve_id": "CVE-2018-1049",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227591,
+        "cve_id": "CVE-2018-15686",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227592,
+        "cve_id": "CVE-2018-15687",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227593,
+        "cve_id": "CVE-2018-15688",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227594,
+        "cve_id": "CVE-2018-16866",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227595,
+        "cve_id": "CVE-2018-6954",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227596,
+        "cve_id": "CVE-2019-3842",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227597,
+        "cve_id": "CVE-2019-6454",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227598,
+        "cve_id": "CVE-2020-1712",
+        "severity": "Medium"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227599,
+        "cve_id": "CVE-2018-16888",
+        "severity": "Low"
+    },
+    {
+        "image_id": "sha256:2a4cca5ac898476c2c47a8d6a17102e00241d6fa377fbe4d50787fe3d7a8d4d6",
+        "vulnerability_id": 227600,
+        "cve_id": "CVE-2019-20386",
+        "severity": "Low"
+    }
+]

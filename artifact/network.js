@@ -22,17 +22,11 @@ async function fetchData() {
         const parent = s.parent;
         const parent_level = s.parent_level;
 
-        const response = await fetch("https://database.vulineage.com", {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "query": `SELECT ld.lineage_id, ld.childs, ld.parents FROM lineage_details ld WHERE ld.lineage_id = ${curr}`
-            })
-        });
-        data = await response.json();
+        const response = await execute_database_server_request(`
+            SELECT ld.lineage_id, ld.childs, ld.parents FROM lineage_details ld 
+            WHERE ld.lineage_id = ${curr}
+        `)
+        data = await response;
 
         var childs = JSON.parse(data[0].childs.replace(/'/g, '"'));
         var new_parents = JSON.parse(data[0].parents.replace(/'/g, '"'));

@@ -4,7 +4,7 @@ import socketserver
 import sqlite3
 
 PORT = 9631
-DIRECTORY = "/public"
+DIRECTORY = "~/Desktop"
 MAX_BODY_SIZE = 256 * 1024  # 256 KB
 
 def db_read(query):
@@ -84,6 +84,6 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 with socketserver.TCPServer(("", PORT), MyHTTPRequestHandler) as httpd:
     print("Serving at port", PORT)
-    db_connection = sqlite3.connect('file:/database/database.db?mode=ro', uri=True)
+    db_connection = sqlite3.connect('file:/Users/ajmedeio/Desktop/database.db', uri=True)
     db_connection.row_factory = sqlite3.Row
     httpd.serve_forever()

@@ -17,43 +17,33 @@
 </head>
 <body>
     <div>
-        <a href="image_vulnerabilities.html">
-            <button>Get image vulnerabilities count by category</button>
-        </a>
-    </div>
-    <div>
-        <a href="lineage_vulnerabilities_growth.html ">
-            <button>Growth of vulnerabilities over time</button>
-        </a>
-    </div>
-    <div>
-        <a href="network.html">
-            <button>Actual Network</button>
-        </a>
-    </div>
-    <div>
-        <a href="tree.html">
-            <button>Lineage Tree</button>
-        </a>
-    </div>
-    <!-- TODO :: Add you page via link over here -->
-
-    <div id="main">
-        <svg width="300" height="600" style="border: 1px solid #777;">
-        </svg>
-        <div>
-            <label for="categorySelect">Show: </label>
-            <select class="custom-select" id="categorySelect" onchange="onCategoryChanged()">
-              <option selected value="all-letters">All Letters</option>
-              <option value="only-consonants">Only Consonants</option>
-              <option value="only-vowels">Only Vowels</option>
-            </select>
+        <span id="repository-select-container"></span>
+        <span id="tag-select-container"></span>
+        <div id="lineage-tree-container">
+            <p>Examine the evolution of a tag over time and determine which tag fits your security policy the best.</p>
+            <svg></svg>
         </div>
     </div>
+    <div>
+        <div id="lineage-vulnerabilities-container">
+            <p>Growth of vulnerabilities over time for the selected lineage</p>
+            <svg></svg>
+        </div>
+        <div id="image-vulnerabilities-container">
+            <p>Get image vulnerabilities count by category</p>
+            <svg></svg>
+        </div>
+    </div>
+    <a href="network.html">Network</a>
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="./main.js"></script>
+<script src="./repository-select.js"></script>
+<script src="./tag-select.js"></script>
+<script src="./lineage-tree.js"></script>
+<script src="./lineage_vulnerabilities_growth.js"></script>
+<script src="./image_vulnerabilities.js"></script>
 </html>

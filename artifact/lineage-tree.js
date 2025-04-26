@@ -1,37 +1,4 @@
-async function get_lineage_by_lineage_id(lineage_id) {
-    return {
-        name: "Img1",
-        vulnerabilityCount: 55,
-        children: [
-            { name: "Img2", vulnerabilityCount: 35, children: [] },
-            { name: "Img3", vulnerabilityCount: 35, children: [] },
-            { name: "Img4", vulnerabilityCount: 35, children: [] },
-            { name: "Img5", vulnerabilityCount: 25, children: [{ name: "Img7", vulnerabilityCount: 15 }, { name: "Img8", vulnerabilityCount: 50 }] },
-            { name: "Img6", vulnerabilityCount: 20, children: [{ name: "Img9", vulnerabilityCount: 1 }] },
-        ]
-    }
-    const sqlite_query = `SELECT ld.*, iil.image_id, id.committed_date
-        FROM lineage_details ld 
-            JOIN lineage_id_to_image_id iil ON ld.lineage_id = iil.lineage_id
-            JOIN image_details id ON iil.image_id = id.image_id
-        WHERE ld.lineage_id = ${lineage_id}
-        ORDER BY id.committed_date`
-    return execute_database_server_request(sqlite_query)
-}
-
-async function execute_database_server_request(sqlite_query) {
-    let response = await fetch('https://database.vulineage.com', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ "query": sqlite_query })
-    })
-    return response.json()
-}
-
-(async () => {
+async function initLineageTree(root) {
     // Specify the charts’ dimensions. The height is variable, depending on the layout.
     const width = 450;
     const marginTop = 10;
@@ -42,19 +9,19 @@ async function execute_database_server_request(sqlite_query) {
     // Rows are separated by dx pixels, columns by dy pixels. These names can be counter-intuitive
     // (dx is a height, and dy a width). This because the tree must be viewed with the root at the
     // “bottom”, in the data domain. The width of a column is based on the tree’s height.
-    const data = await get_lineage_by_lineage_id("-1000033263475935320")
-    console.log(data)
-    const root = d3.hierarchy(data);
+    console.log(root)
     const maxVulnerabilityCount = d3.max(root.descendants(), d => d.data.vulnerabilityCount)
     const dx = 32//(width - marginRight - marginLeft) / (1 + root.height);
 
     // Define the tree layout and the shape for links.
-    const tree = d3.tree().nodeSize([32, 64]);
+    const tree = d3.tree().nodeSize([8, 16]);
     const diagonal = d3.linkVertical().x(d => d.x).y(d => d.y);
 
     // Create the SVG container, a layer for the links and a layer for the nodes.
-    const svg = d3.select("#tree-container > svg")
-        .attr("width", width)
+    const svg = d3.select("#lineage-tree-container > svg")
+    svg.selectAll('*').remove()
+
+    svg.attr("width", width)
         //.attr("height", dx)
         .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif; user-select: none;");
 
@@ -76,7 +43,6 @@ async function execute_database_server_request(sqlite_query) {
     interpolateRdYlGn.interpolator(mirror);
 
     function update(event, source) {
-        console.log("update", event, source)
         const duration = event?.altKey ? 2500 : 250; // hold the alt key to slow down the transition
         const nodes = root.descendants().reverse();
         const links = root.links();
@@ -125,8 +91,8 @@ async function execute_database_server_request(sqlite_query) {
         nodeEnter.append("circle")
             .attr("r", 6)
             .attr("opacity", 0.95)
-            .attr("fill", d => { a = interpolateRdYlGn((d.data["vulnerabilityCount"] / maxVulnerabilityCount)); console.log(d); return a })
-            .attr("stroke", d => { a = interpolateRdYlGn((d.data["vulnerabilityCount"] / maxVulnerabilityCount) + .08); console.log(d); return a })
+            .attr("fill", d => { a = interpolateRdYlGn((d.data["vulnerabilityCount"] / maxVulnerabilityCount)); return a })
+            .attr("stroke", d => { a = interpolateRdYlGn((d.data["vulnerabilityCount"] / maxVulnerabilityCount) + .08); return a })
             .attr("stroke-width", 1)
             .on("mouseover", function (event, d) {
                 d3.select(this).attr("r", 6);
@@ -189,4 +155,80 @@ async function execute_database_server_request(sqlite_query) {
     });
 
     update(null, root);
-})()
+}
+
+async function fetchLineageTreeAsHierarchyRoot(lineage_id) {
+    return d3.hierarchy({
+        name: "Img1",
+        vulnerabilityCount: 55,
+        children: [
+            { name: "Img2", vulnerabilityCount: 35, children: [] },
+            { name: "Img3", vulnerabilityCount: 35, children: [] },
+            { name: "Img4", vulnerabilityCount: 35, children: [] },
+            { name: "Img5", vulnerabilityCount: 25, children: [{ name: "Img7", vulnerabilityCount: 15 }, { name: "Img8", vulnerabilityCount: 50 }] },
+            { name: "Img6", vulnerabilityCount: 20, children: [{ name: "Img9", vulnerabilityCount: 1 }] },
+        ]
+    })
+}
+
+async function fetchLineageTreeAsStratifyRoot(lineage_id) {
+    var nodeMap = new Map(), linkMap = new Map();
+    var stack = [{"id": lineage_id, "parent":"-1", "parent_level":-1}];
+    while(stack.length != 0) {
+        const s = stack.pop();
+        const curr = s.id;
+        const parent = s.parent;
+        const parent_level = s.parent_level;
+
+        const response = await execute_database_server_request(`
+            SELECT ld.lineage_id, ld.childs, ld.parents FROM lineage_details ld 
+            WHERE ld.lineage_id = ${curr}
+        `)
+        data = await response;
+
+        var childs = JSON.parse(data[0].childs.replace(/'/g, '"'));
+        var new_parents = JSON.parse(data[0].parents.replace(/'/g, '"'));
+
+        // The idea of child.parent = parent.parent + 1 didn't worked out and each child lineage had more more than 2 parents
+        // If curr node is achieved by new_parents.length more than earlier then we will update linkMap,
+        // as it means it have been now reached by a closer grandparent than earlier; eventually by actual parent
+        // Dijkstra kinda idea
+        if(parent != "-1" && (nodeMap.get(curr)==undefined || nodeMap.get(curr) <= parent_level+1))
+            linkMap.set(curr, parent);
+        else if(nodeMap.get(curr)!=undefined && nodeMap.get(curr) > parent_level+1)
+            continue; // already got to "curr" node by better/closer grandparent
+        nodeMap.set(curr, parent_level+1);
+
+        for(var i=0; i<childs.length; i++) {
+            stack.push({"id": childs[i], "parent": curr, "parent_level":parent_level+1});
+        }
+    }
+
+    // Prepare nodes and links
+    const nodes = [];
+    const links = [];
+    for (const [u, v] of linkMap) {
+        links.push({ source: u, target: v, value: 1 });
+    }
+    links.push({ source: links[links.length-1].target, target: null, value: 1 }); // Ensure root node has parentId null
+    
+    console.log("Processed Data: ", links);
+      
+    const stratifyLinks = d3.stratify()
+        .id(d => d.source)
+        .parentId(d => d.target);
+    
+    const root = stratifyLinks(links);
+    return root
+}
+
+// main
+window.addEventListener('tagSelected', function (event) {
+    console.log(event)
+    const selectedTag = event.detail;
+    console.log('Selected Tag:', selectedTag);
+    fetchLineageTreeAsStratifyRoot(selectedTag).then(root => {
+        console.log('Fetched Lineage Tree:', root);
+        initLineageTree(root);
+    });
+});

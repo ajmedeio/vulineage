@@ -18,6 +18,13 @@
   fill: var(--content-color);
 }
 
+/* text {
+  color: var(--content-color);
+  fill: var(--content-color);
+  font-family: "Open Sans";
+  font-weight: semibold;
+} */
+
 .label {
   fill: var(--content-color);
 }
@@ -38,14 +45,8 @@
 body {
   font-family: "Open Sans";
   margin: 0;
+  color: var(--content-color);
   background-color: var(--background-color);
-}
-
-#tree-container {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  width: 100vw;
 }
 
 #main {

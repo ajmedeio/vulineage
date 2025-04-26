@@ -40,16 +40,19 @@ function dataPreprocessor(data) {
 }
 
 function CreateChart(data) {
-    var svg = d3.select('svg');
-
     // Get layout parameters
-    var svgWidth = +svg.attr('width');
-    var svgHeight = +svg.attr('height');
+    var svgWidth = 600;
+    var svgHeight = 450;
     var padding = {t: 40, r: 40, b: 40, l: 40};
-
+    
     // Compute chart dimensions
     var chartWidth = svgWidth - padding.l - padding.r;
     var chartHeight = svgHeight - padding.t - padding.b;
+    
+    const svg = d3.select('#image-vulnerabilities-container > svg');
+    svg.attr('width', svgWidth)
+        .attr('height', svgHeight)
+        .attr('style', 'max-width: 100%; height: auto; font: 10px sans-serif; user-select: none;');
 
     // Create a group element for appending chart elements
     var chartG = svg.append('g')
@@ -101,8 +104,8 @@ function CreateChart(data) {
         .attr('class', 'bar-label')
         .attr('x', d => xScale(d.severity) + xScale.bandwidth() / 2)
         .attr('y', d => yScale(d.count) - 5)
+        .attr('fill', 'var(--content-color)')
         .attr('text-anchor', 'middle')
-        .attr('fill', '#000')
         .attr('font-size', '12px')
         .text(d => d.count);
     
@@ -111,8 +114,8 @@ function CreateChart(data) {
         .attr('transform', 'rotate(-90)')
         .attr('x', -chartHeight / 2)
         .attr('y', -padding.l + 15)
+        .attr('fill', 'var(--content-color)')
         .attr('text-anchor', 'middle')
-        .attr('fill', '#000')
         .attr('font-size', '24px')
         .text('Count');
 }

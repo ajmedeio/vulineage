@@ -1,5 +1,5 @@
-fetchData();
-async function fetchData() {
+fetchLineageVulnerabilitiesGrowth();
+async function fetchLineageVulnerabilitiesGrowth() {
     try {
         const response = await fetch("https://database.vulineage.com", {
             method: "POST",
@@ -8,21 +8,21 @@ async function fetchData() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "query": "SELECT Id.committed_date, vr.cve_id, vr.severity FROM lineage_details ld JOIN lineage_id_to_image_id iil ON ld.lineage_id = iil.lineage_id JOIN image_details id ON iil.image_id = id.image_id JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id WHERE ld.lineage_id = 5110799188545663389 and dtsr.report IS NOT NULL ORDER BY id.committed_date"
+                "query": "SELECT Id.committed_date, vr.cve_id, vr.severity FROM lineage_details ld JOIN lineage_id_to_image_id iil ON ld.lineage_id = iil.lineage_id JOIN image_details id ON iil.image_id = id.image_id JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id WHERE ld.lineage_id = 5279765898129407635 and dtsr.report IS NOT NULL ORDER BY id.committed_date"
             })
         });
 
         dataset = await response.json();
         console.log("Fetched Data: ", dataset);
-        dataset = dataPreprocessor(dataset);
-        CreateChart(dataset);
+        dataset = lineageVulnerabilitiesGrowthDataPreprocessor(dataset);
+        CreateLineageVulnerabilitiesGrowthChart(dataset);
     } catch (error) {
         console.error("Error fetching data:", error);
     }
 };
 
 // Use this function to do any preprocessing on returned data
-function dataPreprocessor(data) {
+function lineageVulnerabilitiesGrowthDataPreprocessor(data) {
     const severityLevels = ["Low", "Medium", "High", "Critical", "Unknown"];
     const grouped = {};
 
@@ -57,36 +57,40 @@ function dataPreprocessor(data) {
     return dataset;
 }
 
-function CreateChart(data) {
-    var svg = d3.select('svg');
-
+function CreateLineageVulnerabilitiesGrowthChart(data) {
     // Get layout parameters
-    var svgWidth = +svg.attr('width');
-    var svgHeight = +svg.attr('height');
-    var padding = {t: 40, r: 40, b: 40, l: 40};
+    const svgWidth = 500;
+    const svgHeight = 400;
+    const padding = { t: 40, r: 40, b: 40, l: 40 };
+    
+    const svg = d3.select("#lineage-vulnerabilities-container > svg");
+    console.log("SVG: ", svg);
+    svg.attr('width', svgWidth);
+    svg.attr('height', svgHeight);
 
     // Compute chart dimensions
-    var chartWidth = svgWidth - padding.l - padding.r;
-    var chartHeight = svgHeight - padding.t - padding.b;
+    const chartWidth = svgWidth - padding.l - padding.r;
+    const chartHeight = svgHeight - padding.t - padding.b;
 
     // Create a group element for appending chart elements
-    var chartG = svg.append('g')
-        .attr('transform', 'translate('+[padding.l, padding.t]+')');
+    const chartG = svg.append('g')
+        .attr('transform', `translate(${padding.l},${padding.t})`);
 
     // Create groups for the x- and y-axes
     const allPoints = data.flatMap(d => d.values);
-    var xScale = d3.scaleTime()
+    const xScale = d3.scaleTime()
         .domain(d3.extent(allPoints, d => d.date))
         .range([0, chartWidth]);
 
-    var yScale = d3.scaleLinear()
+    const yScale = d3.scaleLinear()
         .domain([0, d3.max(allPoints, d => d.count)])
         .range([chartHeight, 0]);
 
     chartG.append('g')
         .attr('class', 'x axis')
-        .attr('transform', 'translate('+[0, chartHeight]+')')
+        .attr('transform', `translate(0,${chartHeight})`)
         .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat('%b %d')));
+
     chartG.append('g')
         .attr('class', 'y axis')
         .call(d3.axisLeft(yScale));
@@ -101,7 +105,7 @@ function CreateChart(data) {
     };
 
     // Line generator
-    var line = d3.line()
+    const line = d3.line()
         .x(d => xScale(d.date))
         .y(d => yScale(d.count));
 
@@ -124,14 +128,14 @@ function CreateChart(data) {
             .attr('font-size', '12px')
             .attr('alignment-baseline', 'middle');
     });
-    
+
     chartG.append('text')
         .attr('class', 'y axis-label')
         .attr('transform', 'rotate(-90)')
         .attr('x', -chartHeight / 2)
         .attr('y', -padding.l + 15)
         .attr('text-anchor', 'middle')
-        .attr('fill', '#000')
+        .attr('fill', 'var(--content-color)')
         .attr('font-size', '24px')
         .text('Count');
 }
