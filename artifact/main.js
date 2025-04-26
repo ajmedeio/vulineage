@@ -14,5 +14,5 @@ async function execute_database_server_request(sqlite_query) {
     
 })();
 
-//window.databaseUrl = "https://database.vulineage.com"
-window.databaseUrl = "http://localhost:9631"
+window.databaseUrl = "https://database.vulineage.com"
+//window.databaseUrl = "http://localhost:9631"
