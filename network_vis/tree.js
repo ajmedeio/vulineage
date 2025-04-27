@@ -34,23 +34,25 @@ card.style.boxShadow = '0 2px 10px rgba(0,0,0,0.5)';
 async function getImageDetails(lineage_id) {
   try {
     const query = `
-    SELECT 
-        id.image_id, 
-        id.committed_date, 
-        ld.last_instance_commit_date, 
-        ld.end_of_life, 
-        id.tags, 
-        id.platform, 
-        id.architecture
-    FROM 
-        lineage_id_to_image_id ili
-    JOIN 
+      SELECT 
+        ld.lineage_id,
+        ld.first_instance_commit_date,
+        ld.last_instance_commit_date,
+        ld.tags AS lineage_tags,
+        id.image_id,
+        id.tag_list AS image_tags,
+        id.base_tag AS image_base_tag,
+        id.committed_date AS image_commit_date
+      FROM 
+        lineage_details ld
+      JOIN 
+        lineage_id_to_image_id ili ON ld.lineage_id = ili.lineage_id
+      JOIN 
         image_details id ON ili.image_id = id.image_id
-    JOIN 
-        lineage_details ld ON ili.lineage_id = ld.lineage_id
-    WHERE 
-        ld.lineage_id ='${lineage_id}'
+      WHERE 
+        ld.lineage_id = '${lineage_id}'
     `;
+
     const response = await fetch('https://database.vulineage.com', {
       method: 'POST',
       headers: {
@@ -59,11 +61,12 @@ async function getImageDetails(lineage_id) {
       },
       body: JSON.stringify({ "query": query })
     });
+
     const data = await response.json();
-    return data[0] || {};
+    return data || []; // RETURN ARRAY
   } catch (error) {
     console.error('Error fetching image details:', error);
-    return {};
+    return [];
   }
 }
 
@@ -179,29 +182,44 @@ function CreateTree(rootData) {
       .on("click", async (event, d) => {
         d.children = d.children ? null : d._children;
         update(d);
-
+    
         const lineageId = d.data.id || d.data.name;
-        const details = await getImageDetails(lineageId);
-
-        if (details && Object.keys(details).length > 0) {
-          card.innerHTML = `
-            <strong>Image ID:</strong> ${details.image_id || "Unknown"}<br>
-            <strong>Repository:</strong> ${details.repository || "Unknown"}<br>
-            <strong>Platform:</strong> ${details.platform || "Unknown"}<br>
-            <strong>Architecture:</strong> ${details.architecture || "Unknown"}<br>
-            <strong>Tags:</strong> ${details.tags || "Unknown"}<br>
-            <strong>Committed Date:</strong> ${details.committed_date || "Unknown"}<br>
-            <strong>EOL:</strong> ${details.end_of_life || "Unknown"}
-          `;
+        const images = await getImageDetails(lineageId);
+    
+        const card = document.getElementById('info-card');
+    
+        if (images && images.length > 0) {
+            // Sort by latest commit date
+            images.sort((a, b) => (b.image_commit_date || 0) - (a.image_commit_date || 0));
+            const latest = images[0];
+    
+            // Format tags nicely
+            const imageTags = latest.image_tags ? latest.image_tags.replace(/[\[\]']+/g, '') : "N/A";
+            const lineageTags = latest.lineage_tags ? latest.lineage_tags.replace(/[\[\]']+/g, '') : "N/A";
+    
+            card.innerHTML = `
+                <div class="card-body">
+                    <h5 class="card-title">Image ID</h5>
+                    <p class="card-text text-break">${latest.image_id || "Unknown"}</p>
+                    <hr>
+                    <p><strong>Image Tags:</strong> ${imageTags}</p>
+                    <p><strong>Base Tag:</strong> ${latest.image_base_tag || "Unknown"}</p>
+                    <p><strong>Image Commit Date:</strong> ${new Date(latest.image_commit_date * 1000).toLocaleString() || "Unknown"}</p>
+                    <hr>
+                    <p><strong>Lineage Tags:</strong> ${lineageTags}</p>
+                    <p><strong>First Commit:</strong> ${new Date(latest.first_instance_commit_date * 1000).toLocaleString() || "Unknown"}</p>
+                    <p><strong>Last Commit:</strong> ${new Date(latest.last_instance_commit_date * 1000).toLocaleString() || "Unknown"}</p>
+                </div>
+            `;
         } else {
-          card.innerHTML = `<strong>No details found for this lineage ID.</strong>`;
+            card.innerHTML = `<div class="card-body"><strong>No Image Details found.</strong></div>`;
         }
-
+    
         const [x, y] = [d.x + padding.l, d.y + padding.t];
         card.style.left = `${x + 50}px`;
         card.style.top = `${y}px`;
         card.style.display = 'block';
-      });
+    });
 
     nodeEnter.append("circle")
       .attr("r", 6)
