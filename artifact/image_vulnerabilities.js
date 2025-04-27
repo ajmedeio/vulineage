@@ -1,28 +1,52 @@
-fetchData();
-async function fetchData() {
+async function fetchImageVulnerabilitiesDataByLineageId(lineageId) {
     try {
-        const response = await fetch(window.databaseUrl, {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "query": "SELECT vr.cve_id, vr.severity FROM image_details id JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id WHERE dtsr.report IS NOT NULL AND id.image_id = 'sha256:00005fba3f7c106df1dcdd5753bc18ac6181d9ad0f9aaa17d59d2af76590c7ed'"
-            })
-        });
-
-        dataset = await response.json();
+        dataset = await execute_database_server_request(`
+            with latest_image_id as (
+                select id.image_id 
+                from lineage_details ld 
+                    join lineage_id_to_image_id iitli on iitli.lineage_id = ld.lineage_id 
+                    join image_details id on iitli.image_id = id.image_id
+                where ld.lineage_id='${lineageId}'
+                order by id.committed_date desc
+                limit 1
+            )
+            SELECT vr.cve_id, vr.severity 
+            FROM image_details id 
+                JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest 
+                JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest 
+                JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id 
+            WHERE dtsr.report IS NOT NULL 
+                AND id.image_id = (select image_id from latest_image_id)
+        `);
         console.log("Fetched Data: ", { dataset });
-        dataset = dataPreprocessor(dataset);
-        CreateChart(dataset);
+        dataset = imageVulnerabilitiesDataPreprocessor(dataset);
+        CreateImageVulnerabilitiesChart(dataset);
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+}
+
+async function fetchImageVulnerabilitiesDataByImageId(imageId) {
+    try {
+        dataset = await execute_database_server_request(`
+            SELECT vr.cve_id, vr.severity 
+            FROM image_details id 
+                JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest 
+                JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest 
+                JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id 
+            WHERE dtsr.report IS NOT NULL 
+                AND id.image_id = '${imageId}'
+        `);
+        console.log("Fetched Data: ", { dataset });
+        dataset = imageVulnerabilitiesDataPreprocessor(dataset);
+        CreateImageVulnerabilitiesChart(dataset);
     } catch (error) {
         console.error("Error fetching data:", error);
     }
 };
 
 // Use this function to do any preprocessing on returned data
-function dataPreprocessor(data) {
+function imageVulnerabilitiesDataPreprocessor(data) {
     const severityLevels = ["Low", "Medium", "High", "Critical", "Unknown"];
     const severityCounts = {};
 
@@ -39,7 +63,7 @@ function dataPreprocessor(data) {
     return dataset;
 }
 
-function CreateChart(data) {
+function CreateImageVulnerabilitiesChart(data) {
     // Get layout parameters
     var svgWidth = 600;
     var svgHeight = 450;
@@ -50,6 +74,8 @@ function CreateChart(data) {
     var chartHeight = svgHeight - padding.t - padding.b;
     
     const svg = d3.select('#image-vulnerabilities-container > svg');
+    svg.selectAll('*').remove();
+
     svg.attr('width', svgWidth)
         .attr('height', svgHeight)
         .attr('style', 'max-width: 100%; height: auto; font: 10px sans-serif; user-select: none;');
@@ -119,3 +145,8 @@ function CreateChart(data) {
         .attr('font-size', '24px')
         .text('Count');
 }
+
+window.addEventListener('lineageClicked', (event) => {
+    console.log('image_vulnerabilities loading...', { event })
+    fetchImageVulnerabilitiesDataByLineageId(event.detail.lineage_id_clicked);
+})

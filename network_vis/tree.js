@@ -190,8 +190,8 @@ function CreateTree(rootData) {
     
         if (images && images.length > 0) {
             // Sort by latest commit date
-            images.sort((a, b) => (b.image_commit_date || 0) - (a.image_commit_date || 0));
-            const latest = images[0];
+            images.sort((a, b) => (a.image_commit_date || 0) - (b.image_commit_date || 0));
+            const latest = images[images.length-1];
     
             // Format tags nicely
             const imageTags = latest.image_tags ? latest.image_tags.replace(/[\[\]']+/g, '') : "N/A";

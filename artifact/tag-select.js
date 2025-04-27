@@ -32,7 +32,9 @@ async function refreshTagSelect(repository) {
     console.log('Fetched root lineages.');
     tags = new Map();
     rootLineages.forEach(lineage => {
-        lineage.tags = JSON.parse(lineage.tags.replace(/'/g, '"'));
+        if (typeof lineage.tags === "string") {
+            lineage.tags = JSON.parse(lineage.tags.replace(/'/g, '"'));
+        }
         lineage.tags.forEach(tag => {
             tag.lineage = lineage
             tags.set(tag, lineage);
