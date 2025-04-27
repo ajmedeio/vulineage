@@ -140,5 +140,5 @@ function CreateLineageVulnerabilitiesGrowthChart(data) {
 }
 
 window.addEventListener('lineageClicked', (event) => {
-    fetchLineageVulnerabilitiesGrowth(event.detail.lineage_id_clicked);
+    fetchLineageVulnerabilitiesGrowth(event.detail.lineageId);
 })

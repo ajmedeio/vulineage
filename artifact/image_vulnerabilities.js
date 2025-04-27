@@ -148,5 +148,5 @@ function CreateImageVulnerabilitiesChart(data) {
 
 window.addEventListener('lineageClicked', (event) => {
     console.log('image_vulnerabilities loading...', { event })
-    fetchImageVulnerabilitiesDataByLineageId(event.detail.lineage_id_clicked);
+    fetchImageVulnerabilitiesDataByLineageId(event.detail.lineageId);
 })

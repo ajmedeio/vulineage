@@ -72,9 +72,9 @@ async function initLineageTree(root) {
             .attr("stroke-opacity", 0)
             .on("click", (event, d) => {
                 console.log("Lineage Clicked:", {event, d})
-                let lineage_id_clicked = d.data.source
+                let lineageId = d.data.source
                 window.dispatchEvent(new CustomEvent('lineageClicked', {
-                    detail: { lineage_id_clicked }
+                    detail: { lineageId }
                 }))
             });
 
