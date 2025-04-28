@@ -1,3 +1,4 @@
+import functools
 import json
 import http.server
 import socketserver
@@ -7,6 +8,7 @@ PORT = 9631
 DIRECTORY = "~/Desktop"
 MAX_BODY_SIZE = 256 * 1024  # 256 KB
 
+@functools.lru_cache(maxsize=256)
 def db_read(query):
     cursor = db_connection.cursor()
     cursor.execute(query)
@@ -84,6 +86,6 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 with socketserver.TCPServer(("", PORT), MyHTTPRequestHandler) as httpd:
     print("Serving at port", PORT)
-    db_connection = sqlite3.connect('file:/Users/ajmedeio/Desktop/database.db', uri=True)
+    db_connection = sqlite3.connect('file:/database/database.db', uri=True)
     db_connection.row_factory = sqlite3.Row
     httpd.serve_forever()

@@ -16,10 +16,10 @@ When you push to the main branch, the artifact will automatically get pushed to 
 ## Interacting with the data server
 The following command assumes you have the `vulineage-database-ssh-key.pem` on your Desktop. These are provisioned from the AWS account and cannot be checked-in. Please ask Alex to provision a key if you need it!
 
-`ssh -i ~/Desktop/vulineage-database-ssh-key.pem ec2-user@ec2-204-236-197-103.compute-1.amazonaws.com`
+`ssh -i ~/Desktop/vulineage-database-ssh-key.pem ec2-user@ec2-34-224-22-121.compute-1.amazonaws.com`
 
 ### Copying the server.py to the database server
-`scp -i ~/Desktop/vulineage-database-ssh-key.pem ~/repos/ajmedeio/vulineage/server/database_server.py ec2-user@ec2-204-236-197-103.compute-1.amazonaws.com:/home/ec2-user`
+`scp -i ~/Desktop/vulineage-database-ssh-key.pem ~/repos/ajmedeio/vulineage/server/database_server.py ec2-user@ec2-34-224-22-121.compute-1.amazonaws.com:/home/ec2-user`
 
 ### Testing
 
