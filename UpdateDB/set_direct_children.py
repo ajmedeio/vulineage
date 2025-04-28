@@ -1,92 +1,74 @@
-import sqlite3
+
 from config import DATABASE_PATH
+import sqlite3
+
 
 conn = sqlite3.connect(DATABASE_PATH)
 cursor = conn.cursor()
 
-# SQL query to get number of lineages
-query_count = '''
-SELECT 
- count(lineage_id)
-FROM 
-  lineage_details ld
-'''
-
-cursor.execute(query_count)
-lineages_count=cursor.fetchone()
-
-print(f"Number of lineages: {lineages_count[0]}")
-
-# SQL query to get lineages
-query = '''
+# Step 1: Load direct_children for all lineage_ids into memory
+cursor.execute('''
 SELECT 
   lineage_id,
-  childs,
-  parents
+  direct_children,
+  childs
 FROM 
-  lineage_details ld
+  lineage_details
+''')
+lineages = cursor.fetchall()
+
+# Build direct_children lookup
+direct_children_map = {}
+for lineage_id, direct_children,_ in lineages:
+    direct_children_map[lineage_id] = eval(direct_children)
+  
+
+# Function to recursively get full subtree using only direct children
+def get_subtree_from_direct(lineage_id):
+    subtree = []
+    for child_id in direct_children_map.get(lineage_id):
+        subtree.append(child_id)
+        subtree.append(get_subtree_from_direct(child_id))  # Recursive walk
+    return subtree
+  
+def flatten_children(subtree):
+    flat_list = []
+    for item in subtree:
+        if isinstance(item, list):
+            flat_list.extend(flatten_children(item))
+        else:
+            flat_list.append(item)
+    return flat_list
+
+    
+
+# Prepare batch updates
+updates = []
+errors=0
+for lineage_id, _ ,childs in lineages:
+    children_list= eval(childs)
+    
+    subtree = get_subtree_from_direct(lineage_id)
+    print(f"Subtree for lineage ID {lineage_id}: {subtree}")
+    
+    flatten_children_list= flatten_children(subtree)
+    
+    assert set(flatten_children_list) == set(children_list), \
+    f"Flattened subtree does not match original subtree for lineage ID {lineage_id} \n, \
+    expected {sorted(children_list)} \n, got {sorted(set(flatten_children_list))} \n"
+    
+    updates.append((str(subtree), lineage_id))
+
+#Step 2: Update the subtree_children column
+query_update = '''
+UPDATE lineage_details
+SET subtree = ?
+WHERE lineage_id = ?
 '''
 
+cursor.executemany(query_update, updates)
+conn.commit()
 
-cursor.execute(query)
-lineages=cursor.fetchall()
+print("Subtree_children computed and updated successfully.", len(updates), "rows updated.")
 
-for lineage in lineages:
-    lineage_id = lineage[0]
-    childs = lineage[1]
-    parents=lineage[2]
-    parents_list= eval(parents)
-    
-    childs_list = eval(childs)
-    direct_children=[]
-    for child_lineage_id in childs_list:
-        # SQL query to get number of parents of each child
-        query_child = '''
-        SELECT parents, first_instance_commit_date
-        FROM lineage_details ld
-        WHERE ld.lineage_id= ?
-        '''
-        cursor.execute(query_child, (child_lineage_id,))
-        parents_of_child,start_date = cursor.fetchone()
-        parents_of_child = eval(parents_of_child)
-        
-        assert lineage_id in parents_of_child, f"Lineage ID {lineage_id} not found in parents of child lineage {child_lineage_id}" 
-
-       
-        is_direct = True
-        for other_parent in parents_of_child:
-            if other_parent  in childs_list and other_parent != lineage_id:
-                is_direct = False
-                break
-        if is_direct:
-            direct_children.append((child_lineage_id, start_date))
-            
-  
-    # Sort the direct children by their first instance commit date
-    direct_children.sort(key=lambda x: x[1])
-    # Extract only the lineage IDs from the sorted list
-    direct_children = [child[0] for child in direct_children]     
-             
-    children_set=set(direct_children)        
-    assert len(direct_children) == len(children_set), f"Duplicate child lineage IDs found for lineage ID {lineage_id}"
-          
-# Add the direct children to lineage_details table 
-    query_update = '''
-    UPDATE lineage_details
-    SET direct_children = ?
-    WHERE lineage_id = ?
-    '''
-    
-    # Convert the list to a string representation
-    childs_str = str(direct_children)
-    
-    # Execute the update query
-    cursor.execute(query_update, (childs_str, lineage_id))
-    
-    # Commit the changes
-    conn.commit()
-    
-# Close the database connection
 conn.close()
-
-print("direct_children computed and updated successfully.")
