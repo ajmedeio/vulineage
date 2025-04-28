@@ -1,6 +1,6 @@
 async function initLineageTree(root) {
     // Specify the charts’ dimensions. The height is variable, depending on the layout.
-    const width = 450;
+    const width = window.innerWidth;
     const marginTop = 10;
     const marginRight = 10;
     const marginBottom = 10;
@@ -9,6 +9,15 @@ async function initLineageTree(root) {
     // Rows are separated by dx pixels, columns by dy pixels. These names can be counter-intuitive
     // (dx is a height, and dy a width). This because the tree must be viewed with the root at the
     // “bottom”, in the data domain. The width of a column is based on the tree’s height.
+    d3.map(root.descendants(), d => { 
+        d.data.vulnerabilityCount = (
+            d.data.value.critical_vulnerability_count 
+            + d.data.value.high_vulnerability_count 
+            + d.data.value.medium_vulnerability_count 
+            + d.data.value.low_vulnerability_count 
+            + d.data.value.unknown_vulnerability_count
+        )
+    });
     const maxVulnerabilityCount = d3.max(root.descendants(), d => d.data.vulnerabilityCount)
     const dx = 32//(width - marginRight - marginLeft) / (1 + root.height);
 
@@ -20,19 +29,17 @@ async function initLineageTree(root) {
     const svg = d3.select("#lineage-tree-container > svg")
     svg.selectAll('*').remove()
 
-    svg.attr("style", "width: 650px; height: auto; font: 10px sans-serif; user-select: none;");
+    svg.attr("style", `font: 10px sans-serif; user-select: none;`);
 
     const gLink = svg.append("g")
         .attr("fill", "none")
         .attr("stroke", "#FFF")
         .attr("stroke-opacity", 0.4)
-        .attr("stroke-width", 2)
-        .attr("transform", `translate(225,32)`);
+        .attr("stroke-width", 2);
 
     const gNode = svg.append("g")
         .attr("cursor", "pointer")
-        .attr("pointer-events", "all")
-        .attr("transform", `translate(225,32)`);
+        .attr("pointer-events", "all");
     
     const interpolateRdYlGn = d3.scaleSequential(d3.interpolateRdYlGn)
     const interpolator = interpolateRdYlGn.interpolator();
@@ -46,6 +53,34 @@ async function initLineageTree(root) {
 
         tree(root);
 
+        // Get the bounds of the tree
+        let x0 = Infinity;
+        let x1 = -Infinity;
+        let y0 = Infinity;
+        let y1 = -Infinity;
+        
+        root.each(d => {
+            if (d.x < x0) x0 = d.x;
+            if (d.x > x1) x1 = d.x;
+            if (d.y < y0) y0 = d.y;
+            if (d.y > y1) y1 = d.y;
+        });
+
+        // Compute the new height and width
+        const height = y1 - y0 + marginTop + marginBottom;
+        const width = x1 - x0 + marginLeft + marginRight;
+
+        // Update SVG size
+        svg.attr("height", height)
+            .attr("width", width);
+
+        // Center the tree by transforming the whole graph
+        const centerX = -x0 + marginLeft;
+        const centerY = -y0 + marginTop;
+        
+        gLink.attr("transform", `translate(${centerX},${centerY})`);
+        gNode.attr("transform", `translate(${centerX},${centerY})`);
+
         let left = root;
         let right = root;
         root.eachBefore(node => {
@@ -53,8 +88,7 @@ async function initLineageTree(root) {
             if (node.y > right.y) right = node;
         });
         
-        const height = right.y - left.y + marginLeft + marginRight;
-
+        //const height = right.y - left.y + marginLeft + marginRight;
         const transition = svg.transition()
             .duration(duration)
             .attr("height", height)
@@ -91,8 +125,8 @@ async function initLineageTree(root) {
         nodeEnter.append("circle")
             .attr("r", 6)
             .attr("opacity", 0.95)
-            .attr('fill', '#FFF')
-            //.attr("fill", d => { a = interpolateRdYlGn((d.data["vulnerabilityCount"] / maxVulnerabilityCount)); return a })
+            //.attr('fill', '#FFF')
+            .attr("fill", d => { a = interpolateRdYlGn((d.data["vulnerabilityCount"] / maxVulnerabilityCount)); return a })
             .attr("stroke", d => { a = interpolateRdYlGn((d.data["vulnerabilityCount"] / maxVulnerabilityCount) + .08); return a })
             .attr("stroke-width", 1)
             .on("mouseover", function (event, d) {
@@ -155,23 +189,45 @@ async function fetchLineageTreeAsHierarchyRoot(lineage_id) {
     })
 }
 
-async function fetchLineageTreeAsStratifyRoot(lineage_id) {
+async function fetchLineageTreeAsStratifyRoot(root_lineage_id) {
     var nodeMap = new Map(), linkMap = new Map();
-    var stack = [{"id": lineage_id, "parent":"-1", "parent_level":-1}];
+    const lineage_id_to_last_committed_image_map = new Map();
+    var stack = [{"id": root_lineage_id, "parent":"-1", "parent_level":-1}];
     while(stack.length != 0) {
         const s = stack.pop();
+        
         const curr = s.id;
         const parent = s.parent;
         const parent_level = s.parent_level;
 
-        const response = await execute_database_server_request(`
-            SELECT ld.lineage_id, ld.childs, ld.parents FROM lineage_details ld 
+        const data = await execute_database_server_request(`
+            SELECT 
+                ld.lineage_id,
+                ld.childs,
+                ld.parents,
+                id.*,
+                COUNT(CASE WHEN vr.severity = 'Critical' THEN 1 END) as critical_vulnerability_count,
+                COUNT(CASE WHEN vr.severity = 'High' THEN 1 END) as high_vulnerability_count,
+                COUNT(CASE WHEN vr.severity = 'Medium' THEN 1 END) as medium_vulnerability_count,
+                COUNT(CASE WHEN vr.severity = 'Low' THEN 1 END) as low_vulnerability_count,
+                COUNT(CASE WHEN vr.severity = 'Unknown' THEN 1 END) as unknown_vulnerability_count
+            FROM lineage_details ld 
+                JOIN lineage_id_to_image_id litii ON ld.lineage_id = litii.lineage_id
+                JOIN image_details id ON litii.image_id = id.image_id
+                LEFT JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest 
+                LEFT JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest 
+                LEFT JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id 
             WHERE ld.lineage_id = ${curr}
+            GROUP BY ld.lineage_id, ld.childs, ld.parents, id.image_id
+            ORDER BY id.committed_date
+            LIMIT 1
         `)
-        data = await response;
+        const lineage_and_last_committed_image_details = data[0]
+        console.log(lineage_and_last_committed_image_details)
+        lineage_id_to_last_committed_image_map[curr] = lineage_and_last_committed_image_details;
 
-        var childs = JSON.parse(data[0].childs.replace(/'/g, '"'));
-        var new_parents = JSON.parse(data[0].parents.replace(/'/g, '"'));
+        var childs = JSON.parse(lineage_and_last_committed_image_details.childs.replace(/'/g, '"'));
+        var new_parents = JSON.parse(lineage_and_last_committed_image_details.parents.replace(/'/g, '"'));
 
         // The idea of child.parent = parent.parent + 1 didn't worked out and each child lineage had more more than 2 parents
         // If curr node is achieved by new_parents.length more than earlier then we will update linkMap,
@@ -190,9 +246,9 @@ async function fetchLineageTreeAsStratifyRoot(lineage_id) {
 
     const links = [];
     for (const [u, v] of linkMap) {
-        links.push({ source: u, target: v, value: 1 });
+        links.push({ source: u, target: v, value: lineage_id_to_last_committed_image_map[u] });
     }
-    links.push({ source: links[links.length-1].target, target: null, value: 1 }); // Ensure root node has parentId null
+    links.push({ source: links[links.length-1].target, target: null, value: lineage_id_to_last_committed_image_map[links[links.length-1].target] }); // Ensure root node has parentId null
       
     const stratifyLinks = d3.stratify()
         .id(d => d.source)
@@ -203,10 +259,9 @@ async function fetchLineageTreeAsStratifyRoot(lineage_id) {
 }
 
 // main
-window.addEventListener('tagSelected', function (event) {
+window.addEventListener('tagSelected', async function (event) {
     const selectedTag = event.detail;
-    fetchLineageTreeAsStratifyRoot(selectedTag).then(root => {
-        console.log('Fetched Lineage Tree:', { root });
-        initLineageTree(root);
-    });
+    const root = await fetchLineageTreeAsStratifyRoot(selectedTag)
+    console.log('Fetched Lineage Tree:', { root });
+    initLineageTree(root);
 });
