@@ -49,7 +49,7 @@ for lineage_id, _ ,childs in lineages:
     children_list= eval(childs)
     
     subtree = get_subtree_from_direct(lineage_id)
-    print(f"Subtree for lineage ID {lineage_id}: {subtree}")
+    # print(f"Subtree for lineage ID {lineage_id}: {subtree}")
     
     flatten_children_list= flatten_children(subtree)
     
@@ -69,6 +69,6 @@ WHERE lineage_id = ?
 cursor.executemany(query_update, updates)
 conn.commit()
 
-print("Subtree_children computed and updated successfully.")
+print("subtree computed and updated successfully.")
 
 conn.close()
