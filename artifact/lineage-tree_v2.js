@@ -3,7 +3,7 @@ const SHARED_PADDING= 30;
 
 function initLineageTree(data) {
     const width = SHARED_WIDTH;
-   
+    let isTooltipPinned = false;
 
     const minWidth = 10;
     const minHeight = 10;
@@ -54,7 +54,11 @@ function initLineageTree(data) {
         .attr("fill-opacity", 0.6)
         .attr("fill", d => d.depth === 0 ? "#dcf0fc" : color(d.data.tags))
         .style("cursor", "pointer")
-        .on("click", clicked);
+        .on("click", clicked)
+        .on("mouseover", handleMouseOver)
+        .on("mousemove", handleMouseMove)
+        .on("mouseout", handleMouseOut);
+
 
     const text = cell.append("text")
         .style("user-select", "none")
@@ -125,6 +129,66 @@ function initLineageTree(data) {
         tspan.transition(t).attr("fill-opacity", d => labelVisible(d.target) * 0.7);
     }
 
+    function handleMouseOver(event, d) {
+        const lineageId = d.data.id;
+        const tooltip = document.getElementById("icicle-tooltip");
+      
+        execute_database_server_request(`
+          SELECT 
+            ld.lineage_id,
+            ld.first_instance_commit_date,
+            ld.last_instance_commit_date,
+            ld.tags AS lineage_tags,
+            id.image_id,
+            id.tag_list AS image_tags,
+            id.base_tag AS image_base_tag,
+            id.committed_date AS image_commit_date
+          FROM 
+            lineage_details ld
+          JOIN 
+            lineage_id_to_image_id ili ON ld.lineage_id = ili.lineage_id
+          JOIN 
+            image_details id ON ili.image_id = id.image_id
+          WHERE 
+            ld.lineage_id = '${lineageId}'
+          ORDER BY id.committed_date DESC
+          LIMIT 1;
+        `).then(res => {
+          const data = res[0];
+          if (!data) {
+            tooltip.innerHTML = `<strong>No image found for lineage ${lineageId}</strong>`;
+          } else {
+            const imageTags = data.image_tags ? data.image_tags.replace(/[\[\]']+/g, '') : "N/A";
+            const lineageTags = data.lineage_tags ? data.lineage_tags.replace(/[\[\]']+/g, '') : "N/A";
+            tooltip.innerHTML = `
+              <strong>Image ID:</strong> <code>${data.image_id}</code><br>
+              <strong>Image Tags:</strong> ${imageTags}<br>
+              <strong>Base Tag:</strong> ${data.image_base_tag || "N/A"}<br>
+              <strong>Commit:</strong> ${formatDate(data.image_commit_date)}<br><br>
+              <strong>Lineage Start:</strong> ${formatDate(data.first_instance_commit_date)}<br>
+              <strong>Lineage End:</strong> ${formatDate(data.last_instance_commit_date)}
+            `;
+          }
+      
+          tooltip.style.display = "block";
+        });
+      }
+      
+      function handleMouseMove(event) {
+        const tooltip = document.getElementById("icicle-tooltip");
+        tooltip.style.left = (event.pageX + 15) + "px";
+        tooltip.style.top = (event.pageY + 15) + "px";
+      }
+      
+      function handleMouseOut() {
+        const tooltip = document.getElementById("icicle-tooltip");
+        tooltip.style.display = "none";
+      }
+      
+      function formatDate(unixTimestamp) {
+        if (!unixTimestamp || isNaN(unixTimestamp)) return "N/A";
+        return new Date(unixTimestamp * 1000).toLocaleString();
+      }      
 
 
     function rectWidth(d) {
