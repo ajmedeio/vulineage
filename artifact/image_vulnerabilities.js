@@ -1,152 +1,215 @@
-async function fetchImageVulnerabilitiesDataByLineageId(lineageId) {
+// --- Global State ---
+let lineageVulnerabilitiesGlobalState = null;
+
+// --- Fetch All Vulnerability Data for Root Lineage ---
+async function fetchLineageVulnerabilitiesGrowth(root_lineage_id, highlightInfo) {
+    console.log("Fetching vulnerabilities for root lineage...", root_lineage_id);
     try {
-        dataset = await execute_database_server_request(`
-            with latest_image_id as (
-                select id.image_id 
-                from lineage_details ld 
-                    join lineage_id_to_image_id iitli on iitli.lineage_id = ld.lineage_id 
-                    join image_details id on iitli.image_id = id.image_id
-                where ld.lineage_id='${lineageId}'
-                order by id.committed_date desc
-                limit 1
-            )
-            SELECT vr.cve_id, vr.severity 
-            FROM image_details id 
+        let dataset = await execute_database_server_request(`
+          SELECT Id.committed_date, vr.cve_id, vr.severity 
+            FROM lineage_details ld 
+                JOIN lineage_id_to_image_id iil ON ld.lineage_id = iil.lineage_id 
+                JOIN image_details id ON iil.image_id = id.image_id 
                 JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest 
                 JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest 
                 JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id 
-            WHERE dtsr.report IS NOT NULL 
-                AND id.image_id = (select image_id from latest_image_id)
+            WHERE ld.lineage_id = ${root_lineage_id} and dtsr.report IS NOT NULL
+            ORDER BY id.committed_date
         `);
-        console.log("Fetched Data: ", { dataset });
-        dataset = imageVulnerabilitiesDataPreprocessor(dataset);
-        CreateImageVulnerabilitiesChart(dataset);
+
+        lineageVulnerabilitiesGlobalState = lineageVulnerabilitiesGrowthDataPreprocessor(dataset);
+
+        CreateLineageVulnerabilitiesGrowthChart(lineageVulnerabilitiesGlobalState, null);
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching vulnerabilities:", error);
     }
 }
 
-async function fetchImageVulnerabilitiesDataByImageId(imageId) {
-    try {
-        dataset = await execute_database_server_request(`
-            SELECT vr.cve_id, vr.severity 
-            FROM image_details id 
-                JOIN digest_to_scan_report dtsr ON id.digest = dtsr.digest 
-                JOIN digest_to_vulnerability dtv ON dtsr.digest = dtv.digest 
-                JOIN vulnerability_record vr ON dtv.vulnerability_id = vr.id 
-            WHERE dtsr.report IS NOT NULL 
-                AND id.image_id = '${imageId}'
-        `);
-        console.log("Fetched Data: ", { dataset });
-        dataset = imageVulnerabilitiesDataPreprocessor(dataset);
-        CreateImageVulnerabilitiesChart(dataset);
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    }
-};
-
-// Use this function to do any preprocessing on returned data
-function imageVulnerabilitiesDataPreprocessor(data) {
+// --- Preprocess Data ---
+function lineageVulnerabilitiesGrowthDataPreprocessor(data) {
     const severityLevels = ["Low", "Medium", "High", "Critical", "Unknown"];
-    const severityCounts = {};
+    const grouped = {};
+    const imageData = {};
 
-    severityLevels.forEach(level => {
-        severityCounts[level] = data.filter(d => d.severity === level).length;
+    data.forEach(d => {
+        const date = new Date(d.committed_date * 1000);
+        const dateStr = date.toDateString();
+        const severity = d.severity;
+
+        if (!grouped[dateStr]) grouped[dateStr] = {};
+        if (!grouped[dateStr][severity]) grouped[dateStr][severity] = 0;
+        grouped[dateStr][severity]++;
+
+        const ts = d.committed_date;
+        if (!imageData[ts]) imageData[ts] = { date, ...Object.fromEntries(severityLevels.map(s => [s, 0])) };
+        imageData[ts][severity]++;
     });
 
-    // Convert counts to array for D3
-    var dataset = severityLevels.map(level => ({
-        severity: level,
-        count: severityCounts[level]
-    }));
-    console.log("Processed Data: ", dataset)
-    return dataset;
+    const dataset = severityLevels.map(severity => {
+        const values = Object.keys(grouped).map(date => ({
+            date: new Date(date),
+            count: grouped[date][severity] || 0
+        })).sort((a, b) => a.date - b.date);
+
+        return { severity, values };
+    });
+
+    return { dataset, imageData: Object.values(imageData).sort((a, b) => a.date - b.date) };
 }
 
-function CreateImageVulnerabilitiesChart(data) {
-    // Get layout parameters
-    var svgWidth = 600;
-    var svgHeight = 450;
-    var padding = {t: 40, r: 40, b: 40, l: 40};
-    
-    // Compute chart dimensions
-    var chartWidth = svgWidth - padding.l - padding.r;
-    var chartHeight = svgHeight - padding.t - padding.b;
-    
-    const svg = d3.select('#image-vulnerabilities-container > svg');
+// --- Create Vulnerabilities Line + Bar Chart ---
+function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
+    const { dataset, imageData } = state;
+
+    const WIDTH = window.innerWidth - 20;
+    const HEIGHT = 400;
+    const BAR_HEIGHT = 100;
+    const PADDING = { t: 40, r: 40, b: 40, l: 30 };
+
+    const svg = d3.select("#lineage-vulnerabilities-container > svg");
     svg.selectAll('*').remove();
+    svg.attr('width', WIDTH).attr('height', HEIGHT + BAR_HEIGHT);
 
-    svg.attr('width', svgWidth)
-        .attr('height', svgHeight)
-        .attr('style', 'max-width: 100%; height: auto; font: 10px sans-serif; user-select: none;');
+    const chartWidth = WIDTH - PADDING.l - PADDING.r;
+    const chartHeight = HEIGHT - PADDING.t - PADDING.b;
 
-    // Create a group element for appending chart elements
-    var chartG = svg.append('g')
-        .attr('transform', 'translate('+[padding.l, padding.t]+')');
+    const chartG = svg.append('g')
+        .attr('transform', `translate(${PADDING.l},${PADDING.t})`);
 
-    // Create groups for the x- and y-axes
-    var xScale = d3.scaleBand()
-        .domain(data.map(d => d.severity))
-        .range([0, chartWidth])
-        .padding(0.6);
+    const allPoints = dataset.flatMap(d => d.values);
+    const xScale = d3.scaleTime()
+        .domain(d3.extent(allPoints, d => d.date))
+        .range([0, chartWidth]);
 
-    var yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.count)])
+    const yScale = d3.scaleLinear()
+        .domain([0, d3.max(allPoints, d => d.count)])
         .range([chartHeight, 0]);
 
+    if (highlightInfo) {
+        const bufferDays = 3;
+        const msInDay = 86400 * 1000;
+
+        const paddedStart = new Date((highlightInfo.startDate * 1000) - bufferDays * msInDay);
+        const paddedEnd = new Date((highlightInfo.endDate * 1000) + bufferDays * msInDay);
+
+        chartG.append("rect")
+            .attr("x", xScale(paddedStart))
+            .attr("y", 0)
+            .attr("width", Math.max(20, xScale(paddedEnd) - xScale(paddedStart)))
+            .attr("height", chartHeight)
+            .attr("fill", highlightInfo.color)
+            .attr("opacity", 0.6)
+            .lower();
+    }
+
     chartG.append('g')
-        .attr('class', 'x axis')
-        .attr('transform', 'translate('+[0, chartHeight]+')')
-        .call(d3.axisBottom(xScale));
+        .attr('transform', `translate(0,${chartHeight})`)
+        .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat('%b %d')));
+
     chartG.append('g')
-        .attr('class', 'y axis')
         .call(d3.axisLeft(yScale));
 
-    // Coloring
     const severityColors = {
-        Low: '#4CAF50',
-        Medium: '#FFC107',
-        High: '#FF5722',
-        Critical: '#D32F2F',
-        Unknown: '#9E9E9E'
+        Low: '#4CAF50', Medium: '#FFC107', High: '#FF5722', Critical: '#D32F2F', Unknown: '#9E9E9E'
     };
 
-    chartG.selectAll('.bar')
-        .data(data)
-        .enter()
-        .append('rect')
-        .attr('class', 'bar')
-        .attr('x', d => xScale(d.severity))
-        .attr('y', d => yScale(d.count))
-        .attr('width', xScale.bandwidth())
-        .attr('height', d => chartHeight - yScale(d.count))
-        .attr('fill', d => severityColors[d.severity]);
-    
-    // Labels
-    chartG.selectAll('.bar-label')
-        .data(data)
-        .enter()
-        .append('text')
-        .attr('class', 'bar-label')
-        .attr('x', d => xScale(d.severity) + xScale.bandwidth() / 2)
-        .attr('y', d => yScale(d.count) - 5)
-        .attr('fill', 'var(--content-color)')
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '12px')
-        .text(d => d.count);
-    
-    chartG.append('text')
-        .attr('class', 'y axis-label')
-        .attr('transform', 'rotate(-90)')
-        .attr('x', -chartHeight / 2)
-        .attr('y', -padding.l + 15)
-        .attr('fill', 'var(--content-color)')
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '24px')
-        .text('Count');
+    const line = d3.line()
+        .x(d => xScale(d.date))
+        .y(d => yScale(d.count));
+
+    dataset.forEach(severityGroup => {
+        chartG.append('path')
+            .datum(severityGroup.values)
+            .attr('fill', 'none')
+            .attr('stroke', severityColors[severityGroup.severity])
+            .attr('stroke-width', 2)
+            .attr('d', line);
+
+
+            chartG.selectAll(`.dot-${severityGroup.severity}`)
+                .data(severityGroup.values)
+                .join("circle")
+                .attr("cx", d => xScale(d.date))
+                .attr("cy", d => yScale(d.count))
+                .attr("r", 3)
+                .attr("fill", severityColors[severityGroup.severity])
+                .attr("opacity", 0.8)
+                .on("mouseover", (event, d) => {
+                    const dateStr = d.date.toDateString();
+                    const image = imageData.find(img => img.date.toDateString() === dateStr);
+                    if (!image) return;
+            
+                    showTooltipWithBarChart(event, image);
+                })
+                .on("mousemove", event => {
+                    tooltip.style("left", (event.pageX + 15) + "px")
+                           .style("top", (event.pageY + 10) + "px");
+                })
+                .on("mouseout", () => {
+                    tooltip.style("display", "none");
+                    tooltip.selectAll("*").remove();
+                });
+            
+            
+    });
+
+   
 }
 
+
+
+function showTooltipWithBarChart(event, image) {
+    const tooltip = d3.select("#vuln-tooltip");
+    tooltip.style("display", "block")
+           .style("left", (event.pageX + 15) + "px")
+           .style("top", (event.pageY + 10) + "px");
+
+    tooltip.selectAll("*").remove();  // clear previous content
+
+    tooltip.append("div")
+        .text("Vulnerabilities on " + image.date.toDateString())
+        .style("font-weight", "bold")
+        .style("margin-bottom", "6px");
+
+    const svg = tooltip.append("svg")
+        .attr("width", 200)
+        .attr("height", 100);
+
+    const severityLevels = ["Low", "Medium", "High", "Critical", "Unknown"];
+    const severityColors = {
+        Low: '#4CAF50', Medium: '#FFC107', High: '#FF5722', Critical: '#D32F2F', Unknown: '#9E9E9E'
+    };
+
+    const maxCount = d3.max(severityLevels, s => image[s]);
+    const xScale = d3.scaleLinear().domain([0, maxCount]).range([0, 180]);
+
+    svg.selectAll("rect")
+        .data(severityLevels)
+        .join("rect")
+        .attr("x", 0)
+        .attr("y", (d, i) => i * 18)
+        .attr("width", d => xScale(image[d]))
+        .attr("height", 14)
+        .attr("fill", d => severityColors[d]);
+
+    svg.selectAll("text")
+        .data(severityLevels)
+        .join("text")
+        .attr("x", d => xScale(image[d]) + 4)
+        .attr("y", (d, i) => i * 18 + 12)
+        .text(d => `${d}: ${image[d] || 0}`)
+        .style("font-size", "10px");
+}
+
+
+
+window.addEventListener('tagSelected', async (event) => {
+    const rootLineageId = event.detail;
+    await fetchLineageVulnerabilitiesGrowth(rootLineageId, null);
+});
+
 window.addEventListener('lineageClicked', (event) => {
-    console.log('image_vulnerabilities loading...', { event })
-    fetchImageVulnerabilitiesDataByLineageId(event.detail.lineageId);
-})
+    const { startDate, endDate, color } = event.detail;
+    const highlightInfo = { startDate, endDate, color };
+    CreateLineageVulnerabilitiesGrowthChart(lineageVulnerabilitiesGlobalState, highlightInfo);
+});

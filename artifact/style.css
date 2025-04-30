@@ -52,3 +52,7 @@ body {
 #main {
   color: var(--content-color);
 }
+#select {
+  max-height: 250px;
+  overflow-y: auto;
+}

@@ -1,10 +1,10 @@
 <!DOCTYPE HTML>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8;">
-    <meta http-equiv="Content-Security-Policy" 
-        content="
+    <meta http-equiv="Content-Security-Policy" content="
             script-src-elem 'self' https://maxcdn.bootstrapcdn.com https://d3js.org https://code.jquery.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';
             script-src 'self' 'unsafe-eval' 'unsafe-inline';
             default-src *;
@@ -12,39 +12,63 @@
             img-src * data:;
     ">
     <title>Vulnerability Lineage</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+        integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="/static/css/slimselect.min.css">
+    <script src="/static/js/slimselect.min.js"></script>
+
 </head>
+
 <body>
+<div style="margin: 20px;"> 
     <div style="display: flex;">
         <span id="repository-select-container"></span>
         <span id="tag-select-container"></span>
     </div>
-    <div>
-        <div id="lineage-tree-container">
-            <p>Examine the evolution of a tag over time and determine which tag fits your security policy best.</p>
-            <svg></svg>
-        </div>
+
+
+
+    <div id="lineage-tree-container" >
+        <p>Examine the evolution of a tag over time and determine which tag fits your security policy best.</p>
+
+        <svg></svg>
     </div>
-    <div style="display: flex;">
-        <div id="lineage-vulnerabilities-container">
-            <p>Growth of vulnerabilities over time for the selected lineage</p>
-            <svg></svg>
-        </div>
-        <div id="image-vulnerabilities-container">
-            <p>Get image vulnerabilities count by category</p>
-            <svg></svg>
-        </div>
+    <div id="lineage-vulnerabilities-container">
+        <p>Growth of vulnerabilities over time for the selected lineage</p>
+        <svg></svg>
+        <div id="vuln-tooltip" style="
+        position: absolute;
+        pointer-events: none;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        display: none;
+        z-index: 999;
+    "></div>
     </div>
+    </div>
+</div>
+
+
 </body>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+    integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+    integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+    crossorigin="anonymous"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="./main.js"></script>
 <script src="./repository-select.js"></script>
 <script src="./tag-select.js"></script>
-<script src="./lineage-tree.js"></script>
+<script src="./lineage-tree_v2.js"></script>
 <script src="./lineage_vulnerabilities_growth.js"></script>
 <script src="./image_vulnerabilities.js"></script>
+
 </html>

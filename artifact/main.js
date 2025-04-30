@@ -23,6 +23,7 @@ class LruCache {
 const clientCache = new LruCache()
 
 async function execute_database_server_request(sqlite_query) {
+  console.log('Executing query:', {sqlite_query})
     let cached_response = clientCache.get(sqlite_query)
     if (cached_response !== undefined) {
         console.log('Client Cache hit!', {sqlite_query})
@@ -34,6 +35,7 @@ async function execute_database_server_request(sqlite_query) {
         clientCache.set(sqlite_query, cached_response)
         return cached_response
     }
+
 
     let response = await fetch(window.databaseUrl, {
         method: 'POST',
@@ -58,5 +60,5 @@ async function execute_database_server_request(sqlite_query) {
     
 })();
 
-//window.databaseUrl = "https://database.vulineage.com"
-window.databaseUrl = "http://localhost:9631"
+window.databaseUrl = "https://database.vulineage.com"
+// window.databaseUrl = "http://localhost:9631"
