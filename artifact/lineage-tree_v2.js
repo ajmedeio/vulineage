@@ -47,14 +47,25 @@ function initLineageTree(data) {
         .join("g")
         // .attr("transform", d => `translate(${d.x0},${d.y0})`);
         .attr("transform", d => `translate(${d.x0 },${d.y0})`);
-
+    
+    
     const rect = cell.append("rect")
         .attr("width", d => rectWidth(d))
         .attr("height", d => Math.max(d.y1 - d.y0, minHeight))
         .attr("fill-opacity", 0.6)
         .attr("fill", d => d.depth === 0 ? "#dcf0fc" : color(d.data.tags))
-        .attr("stroke", d => d.data.endOfLife == 0? "red" : "none")
-        .attr("stroke-width", d => d.data.endOfLife == 0? 3 : 0)
+        .attr("stroke", d => {
+            //if (!d.data.endOfLife) return "red";
+            if (d.data.endOfLife === 1) return "green";
+            return "red"; 
+        })
+        .attr("stroke-width", d => {
+            //if (!d.data.endOfLife) return 4; 
+            if (d.data.endOfLife === 1) return 4;
+            return 4;
+        })
+        // .attr("stroke", d => d.data.endOfLife == 0? "red" : "none")
+        // .attr("stroke-width", d => d.data.endOfLife == 0? 3 : 0)
         .style("cursor", "pointer")
         .on("click", clicked)
         .on("mouseover", handleMouseOver)
