@@ -170,7 +170,7 @@ function initLineageTree(data) {
               <strong>Commit:</strong> ${formatDate(data.image_commit_date)}<br><br>
               <strong>Lineage Start:</strong> ${formatDate(data.first_instance_commit_date)}<br>
               <strong>Lineage End:</strong> ${formatDate(data.last_instance_commit_date)}<br>
-              <strong>Lineage Status:</strong> ${data.end_of_life ? `<span style="color:red; font-weight:bold;">🛑 End of Life</span>` : `<span style="color:green;">✅ Active</span>`}
+              <strong>Lineage Status:</strong> ${!data.end_of_life ? `<span style="color:red; font-weight:bold;">🛑 End of Life</span>` : `<span style="color:green;">✅ Active</span>`}
             `;
           }
       
