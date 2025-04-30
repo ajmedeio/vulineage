@@ -1,12 +1,12 @@
 // --- Global State ---
 let lineageVulnerabilitiesGlobalState = null;
-
+const tooltip = d3.select("#vuln-tooltip");
 // --- Fetch All Vulnerability Data for Root Lineage ---
 async function fetchLineageVulnerabilitiesGrowth(root_lineage_id, highlightInfo) {
     console.log("Fetching vulnerabilities for root lineage...", root_lineage_id);
     try {
         let dataset = await execute_database_server_request(`
-          SELECT Id.committed_date, vr.cve_id, vr.severity 
+          SELECT id.repository, id.digest, id.committed_date, vr.cve_id, vr.severity 
             FROM lineage_details ld 
                 JOIN lineage_id_to_image_id iil ON ld.lineage_id = iil.lineage_id 
                 JOIN image_details id ON iil.image_id = id.image_id 
@@ -41,7 +41,12 @@ function lineageVulnerabilitiesGrowthDataPreprocessor(data) {
         grouped[dateStr][severity]++;
 
         const ts = d.committed_date;
-        if (!imageData[ts]) imageData[ts] = { date, ...Object.fromEntries(severityLevels.map(s => [s, 0])) };
+        if (!imageData[ts]) imageData[ts] = {
+            date,
+            digest: d.digest,
+            repository: d.repository,
+            ...Object.fromEntries(severityLevels.map(s => [s, 0]))
+        };
         imageData[ts][severity]++;
     });
 
@@ -126,79 +131,155 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
             .attr('d', line);
 
 
-            chartG.selectAll(`.dot-${severityGroup.severity}`)
-                .data(severityGroup.values)
-                .join("circle")
-                .attr("cx", d => xScale(d.date))
-                .attr("cy", d => yScale(d.count))
-                .attr("r", 3)
-                .attr("fill", severityColors[severityGroup.severity])
-                .attr("opacity", 0.8)
-                .on("mouseover", (event, d) => {
-                    const dateStr = d.date.toDateString();
-                    const image = imageData.find(img => img.date.toDateString() === dateStr);
-                    if (!image) return;
-            
-                    showTooltipWithBarChart(event, image);
-                })
-                .on("mousemove", event => {
-                    tooltip.style("left", (event.pageX + 15) + "px")
-                           .style("top", (event.pageY + 10) + "px");
-                })
-                .on("mouseout", () => {
-                    tooltip.style("display", "none");
-                    tooltip.selectAll("*").remove();
-                });
-            
-            
+        chartG.selectAll(`.dot-${severityGroup.severity}`)
+            .data(severityGroup.values)
+            .join("circle")
+            .attr("cx", d => xScale(d.date))
+            .attr("cy", d => yScale(d.count))
+            .attr("r", 3)
+            .attr("fill", severityColors[severityGroup.severity])
+            .attr("opacity", 0.8)
+            .on("mouseover", (event, d) => {
+                const dateStr = d.date.toDateString();
+                const image = imageData.find(img => img.date.toDateString() === dateStr);
+                if (!image) return;
+
+                showTooltipWithBarChart(event, image);
+            })
+            .on("mousemove", event => {
+                tooltip.style("left", (event.pageX + 15) + "px")
+                    .style("top", (event.pageY + 10) + "px");
+            })
+            .on("mouseout", () => {
+                tooltip.style("display", "none");
+                tooltip.selectAll("*").remove();
+            });
+
+
     });
 
-   
+
 }
 
 
 
+// function showTooltipWithBarChart(event, image) {
+//     const tooltip = d3.select("#vuln-tooltip");
+//     tooltip.style("display", "block")
+//            .style("left", (event.pageX + 15) + "px")
+//            .style("top", (event.pageY + 10) + "px");
+
+//     tooltip.selectAll("*").remove();  // clear previous content
+
+//     tooltip.append("div")
+//         .text("Vulnerabilities on " + image.date.toDateString())
+//         .style("font-weight", "bold")
+//         .style("margin-bottom", "6px");
+
+//     tooltip.append("div")
+//     .text("Image ID: " + image.image_id)
+//     .style("font-size", "12px")
+//     .style("margin-bottom", "4px");
+
+//     const svg = tooltip.append("svg")
+//         .attr("width", 200)
+//         .attr("height", 100);
+
+//     const severityLevels = ["Low", "Medium", "High", "Critical", "Unknown"];
+//     const severityColors = {
+//         Low: '#4CAF50', Medium: '#FFC107', High: '#FF5722', Critical: '#D32F2F', Unknown: '#9E9E9E'
+//     };
+
+//     const maxCount = d3.max(severityLevels, s => image[s]);
+//     const xScale = d3.scaleLinear().domain([0, maxCount]).range([0, 180]);
+
+//     svg.selectAll("rect")
+//         .data(severityLevels)
+//         .join("rect")
+//         .attr("x", 0)
+//         .attr("y", (d, i) => i * 18)
+//         .attr("width", d => xScale(image[d]))
+//         .attr("height", 14)
+//         .attr("fill", d => severityColors[d]);
+
+//     svg.selectAll("text")
+//         .data(severityLevels)
+//         .join("text")
+//         .attr("x", d => xScale(image[d]) + 4)
+//         .attr("y", (d, i) => i * 18 + 12)
+//         .text(d => `${d}: ${image[d] || 0}`)
+//         .style("font-size", "10px");
+// }
 function showTooltipWithBarChart(event, image) {
-    const tooltip = d3.select("#vuln-tooltip");
-    tooltip.style("display", "block")
-           .style("left", (event.pageX + 15) + "px")
-           .style("top", (event.pageY + 10) + "px");
-
-    tooltip.selectAll("*").remove();  // clear previous content
-
-    tooltip.append("div")
-        .text("Vulnerabilities on " + image.date.toDateString())
-        .style("font-weight", "bold")
-        .style("margin-bottom", "6px");
-
-    const svg = tooltip.append("svg")
-        .attr("width", 200)
-        .attr("height", 100);
+    // const tooltip = d3.select("#vuln-tooltip");
 
     const severityLevels = ["Low", "Medium", "High", "Critical", "Unknown"];
     const severityColors = {
         Low: '#4CAF50', Medium: '#FFC107', High: '#FF5722', Critical: '#D32F2F', Unknown: '#9E9E9E'
     };
 
+    const barHeight = 12;
+    const barSpacing = 4;
+    const totalHeight = severityLevels.length * (barHeight + barSpacing);
+
+
+    tooltip.style("display", "block")
+        .style("left", (event.pageX + 15) + "px")
+        .style("top", (event.pageY + 10) + "px");
+
+
+    tooltip.html(""); // clear previous
+
+
+    tooltip.append("div")
+        .style("font-weight", "bold")
+        .style("margin-bottom", "4px")
+        .style("color", "#000") // ensure black text
+        .text("Vulnerabilities on " + image.date.toDateString());
+
+    // Split long digest into two lines at the middle point
+    const fullId = image.repository + '@' + image.digest || "";
+    const midpoint = Math.floor(fullId.length / 2);
+    const firstHalf = fullId.slice(0, midpoint);
+    const secondHalf = fullId.slice(midpoint);
+
+
+    tooltip.append("div")
+        .style("font-size", "10px")
+        .style("margin-bottom", "8px")
+        .style("color", "#333")
+        .html(`Digest:<br>${firstHalf}<wbr>${secondHalf}`);
+
+ 
+
+
     const maxCount = d3.max(severityLevels, s => image[s]);
     const xScale = d3.scaleLinear().domain([0, maxCount]).range([0, 180]);
+
+    const maxX = 240; 
+
+    const svg = tooltip.append("svg")
+    .attr("width", maxX)
+    .attr("height", totalHeight)
+    .style("margin-top", "4px");
 
     svg.selectAll("rect")
         .data(severityLevels)
         .join("rect")
         .attr("x", 0)
-        .attr("y", (d, i) => i * 18)
+        .attr("y", (d, i) => i * (barHeight + barSpacing))
         .attr("width", d => xScale(image[d]))
-        .attr("height", 14)
+        .attr("height", barHeight)
         .attr("fill", d => severityColors[d]);
 
     svg.selectAll("text")
         .data(severityLevels)
         .join("text")
         .attr("x", d => xScale(image[d]) + 4)
-        .attr("y", (d, i) => i * 18 + 12)
+        .attr("y", (d, i) => i * (barHeight + barSpacing) + barHeight - 2)
         .text(d => `${d}: ${image[d] || 0}`)
-        .style("font-size", "10px");
+        .style("font-size", "10px")
+        .style("fill", "black");
 }
 
 
