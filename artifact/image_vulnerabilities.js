@@ -256,7 +256,7 @@ function showTooltipWithBarChart(event, image) {
     const maxCount = d3.max(severityLevels, s => image[s]);
     const xScale = d3.scaleLinear().domain([0, maxCount]).range([0, 180]);
 
-    const maxX = 240; 
+    const maxX = 280; 
 
     const svg = tooltip.append("svg")
     .attr("width", maxX)
