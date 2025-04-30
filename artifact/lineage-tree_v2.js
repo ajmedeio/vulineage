@@ -53,7 +53,7 @@ function initLineageTree(data) {
         .attr("height", d => Math.max(d.y1 - d.y0, minHeight))
         .attr("fill-opacity", 0.6)
         .attr("fill", d => d.depth === 0 ? "#dcf0fc" : color(d.data.tags))
-        .attr("stroke", d => d.data.endOfLife == 1? "red" : "none")
+        .attr("stroke", d => d.data.endOfLife == 1? "green" : "none")
         .attr("stroke-width", d => d.data.endOfLife == 1? 3 : 0)
         .style("cursor", "pointer")
         .on("click", clicked)
@@ -164,12 +164,11 @@ function initLineageTree(data) {
             const imageTags = data.image_tags ? data.image_tags.replace(/[\[\]']+/g, '') : "N/A";
             const lineageTags = data.lineage_tags ? data.lineage_tags.replace(/[\[\]']+/g, '') : "N/A";
             tooltip.innerHTML = `
-              <strong>Image ID:</strong> <code>${data.image_id}</code><br>
+              <strong>Latest Image ID:</strong> <code>${data.image_id}</code><br>
               <strong>Image Tags:</strong> ${imageTags}<br>
-              <strong>Base Tag:</strong> ${data.image_base_tag || "N/A"}<br>
-              <strong>Commit:</strong> ${formatDate(data.image_commit_date)}<br><br>
+              <strong>Base Image Tag:</strong> ${data.image_base_tag || "N/A"}<br>
+              <strong>Latest Image Commit:</strong> ${formatDate(data.image_commit_date)}<br><br>
               <strong>Lineage Start:</strong> ${formatDate(data.first_instance_commit_date)}<br>
-              <strong>Lineage End:</strong> ${formatDate(data.last_instance_commit_date)}<br>
               <strong>Lineage Status:</strong> ${!data.end_of_life ? `<span style="color:red; font-weight:bold;">🛑 End of Life</span>` : `<span style="color:green;">✅ Active</span>`}
             `;
           }
