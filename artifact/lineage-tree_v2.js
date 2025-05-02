@@ -192,8 +192,7 @@ function initLineageTree(data) {
 
     function handleMouseMove(event) {
         const tooltip = document.getElementById("icicle-tooltip");
-        tooltip.style.left = (event.pageX + 15) + "px";
-        tooltip.style.top = (event.pageY + 15) + "px";
+        adjustTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
     }
 
     function handleMouseOut() {
@@ -310,6 +309,28 @@ async function fetchLineageTreeAsStratifyRoot(root_lineage_id) {
     };
 
     return rootData
+}
+
+// To handle the tooltip don't go outside screen
+function adjustTooltipPosition(left, top, tooltip) {
+    const rect = tooltip.node().getBoundingClientRect();
+    const tooltipWidth = rect.width;
+    const tooltipHeight = rect.height;
+
+    const pageWidth = window.innerWidth;
+    const pageHeight = window.innerHeight;
+
+    let adjustedLeft = left;
+    let adjustedTop = top;
+    if (left + tooltipWidth > pageWidth) {
+        adjustedLeft = left - tooltipWidth - 20;
+    }
+    if (top + tooltipHeight > pageHeight) {
+        adjustedTop = top - tooltipHeight - 20;
+    }
+
+    tooltip.style("left", adjustedLeft + "px")
+           .style("top", adjustedTop + "px");
 }
 
 window.addEventListener('tagSelected', async function (event) {

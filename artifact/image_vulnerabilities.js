@@ -148,8 +148,7 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
                 showTooltipWithBarChart(event, image);
             })
             .on("mousemove", event => {
-                tooltip.style("left", (event.pageX + 15) + "px")
-                    .style("top", (event.pageY + 10) + "px");
+                adjustTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
             })
             .on("mouseout", () => {
                 tooltip.style("display", "none");
@@ -210,14 +209,10 @@ function showTooltipWithBarChart(event, image) {
     const totalHeight = severityLevels.length * (barHeight + barSpacing);
 
 
-    tooltip.style("display", "block")
-        .style("left", (event.pageX + 15) + "px")
-        .style("top", (event.pageY + 10) + "px");
-
+    tooltip.style("display", "block");
+    adjustTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
 
     tooltip.html(""); // clear previous
-
-
     tooltip.append("div")
         .style("font-weight", "bold")
         .style("margin-bottom", "4px")
@@ -236,8 +231,6 @@ function showTooltipWithBarChart(event, image) {
         .style("margin-bottom", "8px")
         .style("color", "#333")
         .html(`Digest:<br>${firstHalf}<wbr>${secondHalf}`);
-
-
 
 
     const maxCount = d3.max(severityLevels, s => image[s]);
@@ -269,7 +262,27 @@ function showTooltipWithBarChart(event, image) {
         .style("fill", "black");
 }
 
+// To handle the tooltip don't go outside screen
+function adjustTooltipPosition(left, top, tooltip) {
+    const rect = tooltip.node().getBoundingClientRect();
+    const tooltipWidth = rect.width;
+    const tooltipHeight = rect.height;
 
+    const pageWidth = window.innerWidth;
+    const pageHeight = window.innerHeight;
+
+    let adjustedLeft = left;
+    let adjustedTop = top;
+    if (left + tooltipWidth > pageWidth) {
+        adjustedLeft = left - tooltipWidth - 20;
+    }
+    if (top + tooltipHeight > pageHeight) {
+        adjustedTop = top - tooltipHeight - 20;
+    }
+
+    tooltip.style("left", adjustedLeft + "px")
+           .style("top", adjustedTop + "px");
+}
 
 
 window.addEventListener('tagSelected', async (event) => {
