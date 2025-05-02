@@ -50,8 +50,6 @@ It includes a zoomable icicle plot, a dynamic vulnerability timeline with detail
 
 * network.js – D3-based force-directed graph
 
-* image_vulnerabilities.js – per image total count for different categories of vulnerabilities
-
-* lineage_vulnerabilities_growth.js - time-series vulnerability chart
+* image_vulnerabilities.js – time-series vulnerability chart and per image total count for different categories of vulnerabilities upon hover
 
 
