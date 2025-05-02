@@ -65,8 +65,9 @@ function lineageVulnerabilitiesGrowthDataPreprocessor(data) {
 // --- Create Vulnerabilities Line + Bar Chart ---
 function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
     const { dataset, imageData } = state;
-
-    const WIDTH = window.innerWidth - 20;
+    const container = document.getElementById('lineage-vulnerabilities-container');
+    const WIDTH = container.getBoundingClientRect().width;
+    // const WIDTH = window.innerWidth - 20;
     const HEIGHT = 400;
     const BAR_HEIGHT = 100;
     const PADDING = { t: 40, r: 40, b: 40, l: 30 };
@@ -155,61 +156,47 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
                 tooltip.selectAll("*").remove();
             });
 
-
+        renderSeverityLegend("vuln-legend");
     });
 
 
 }
 
+function renderSeverityLegend(containerId) {
+    const levels = ["Low", "Medium", "High", "Critical", "Unknown"];
+    const severityColors = {
+        Low: '#4CAF50',
+        Medium: '#FFC107',
+        High: '#FF5722',
+        Critical: '#D32F2F',
+        Unknown: '#9E9E9E'
+    };
+
+    const container = d3.select(`#${containerId}`);
+    container.selectAll("*").remove(); // clear existing legend
+
+    const legend = container.append("div")
+        .style("display", "flex")
+        .style("gap", "10px")
+        .style("flex-wrap", "wrap")
+        .style("font-size", "13px");
+
+    levels.forEach(level => {
+        const item = legend.append("div")
+            .style("display", "flex")
+            .style("align-items", "center")
+            .style("gap", "4px");
+
+        item.append("div")
+            .style("width", "12px")
+            .style("height", "12px")
+            .style("background-color", severityColors[level]);
+
+        item.append("span").text(level);
+    });
+}
 
 
-// function showTooltipWithBarChart(event, image) {
-//     const tooltip = d3.select("#vuln-tooltip");
-//     tooltip.style("display", "block")
-//            .style("left", (event.pageX + 15) + "px")
-//            .style("top", (event.pageY + 10) + "px");
-
-//     tooltip.selectAll("*").remove();  // clear previous content
-
-//     tooltip.append("div")
-//         .text("Vulnerabilities on " + image.date.toDateString())
-//         .style("font-weight", "bold")
-//         .style("margin-bottom", "6px");
-
-//     tooltip.append("div")
-//     .text("Image ID: " + image.image_id)
-//     .style("font-size", "12px")
-//     .style("margin-bottom", "4px");
-
-//     const svg = tooltip.append("svg")
-//         .attr("width", 200)
-//         .attr("height", 100);
-
-//     const severityLevels = ["Low", "Medium", "High", "Critical", "Unknown"];
-//     const severityColors = {
-//         Low: '#4CAF50', Medium: '#FFC107', High: '#FF5722', Critical: '#D32F2F', Unknown: '#9E9E9E'
-//     };
-
-//     const maxCount = d3.max(severityLevels, s => image[s]);
-//     const xScale = d3.scaleLinear().domain([0, maxCount]).range([0, 180]);
-
-//     svg.selectAll("rect")
-//         .data(severityLevels)
-//         .join("rect")
-//         .attr("x", 0)
-//         .attr("y", (d, i) => i * 18)
-//         .attr("width", d => xScale(image[d]))
-//         .attr("height", 14)
-//         .attr("fill", d => severityColors[d]);
-
-//     svg.selectAll("text")
-//         .data(severityLevels)
-//         .join("text")
-//         .attr("x", d => xScale(image[d]) + 4)
-//         .attr("y", (d, i) => i * 18 + 12)
-//         .text(d => `${d}: ${image[d] || 0}`)
-//         .style("font-size", "10px");
-// }
 function showTooltipWithBarChart(event, image) {
     // const tooltip = d3.select("#vuln-tooltip");
 
@@ -250,18 +237,18 @@ function showTooltipWithBarChart(event, image) {
         .style("color", "#333")
         .html(`Digest:<br>${firstHalf}<wbr>${secondHalf}`);
 
- 
+
 
 
     const maxCount = d3.max(severityLevels, s => image[s]);
     const xScale = d3.scaleLinear().domain([0, maxCount]).range([0, 180]);
 
-    const maxX = 280; 
+    const maxX = 280;
 
     const svg = tooltip.append("svg")
-    .attr("width", maxX)
-    .attr("height", totalHeight)
-    .style("margin-top", "4px");
+        .attr("width", maxX)
+        .attr("height", totalHeight)
+        .style("margin-top", "4px");
 
     svg.selectAll("rect")
         .data(severityLevels)
@@ -281,6 +268,7 @@ function showTooltipWithBarChart(event, image) {
         .style("font-size", "10px")
         .style("fill", "black");
 }
+
 
 
 

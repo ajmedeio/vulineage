@@ -4,9 +4,9 @@ initTagSelect();
 
 async function initTagSelect() {
     const container = d3.select('#tag-select-container');
-    container.append('label')
-        .attr('for', 'tag-select')
-        .text('Select a tag:');
+    // container.append('label')
+    //     .attr('for', 'tag-select')
+    //     .text('Select a tag:');
      
 
     container.append('select')
@@ -88,3 +88,7 @@ window.addEventListener('repositorySelected', function (event) {
     console.log("repositorySelected", { event, selectedRepositories });
     refreshTagSelect(selectedRepositories[0]);
 });
+
+document.getElementById("darkModeToggle").addEventListener("click", () => {
+    document.documentElement.classList.toggle("dark-mode");
+  });

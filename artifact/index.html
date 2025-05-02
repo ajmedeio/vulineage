@@ -5,53 +5,53 @@
     <meta charset="UTF-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8;">
     <meta http-equiv="Content-Security-Policy" content="
-            script-src-elem 'self' https://maxcdn.bootstrapcdn.com https://d3js.org https://code.jquery.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';
-            script-src 'self' 'unsafe-eval' 'unsafe-inline';
-            default-src *;
-            style-src 'self' https://maxcdn.bootstrapcdn.com 'unsafe-inline';
-            img-src * data:;
-    ">
+    script-src-elem 'self' https://maxcdn.bootstrapcdn.com https://d3js.org https://code.jquery.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline';
+    default-src *;
+    style-src 'self' https://maxcdn.bootstrapcdn.com https://fonts.googleapis.com 'unsafe-inline';
+    img-src * data:;
+">
     <title>Vulnerability Lineage</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
         integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./static/css/slimselect.min.css">
     <script src="./static/js/slimselect.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
 
 </head>
 
 <body>
-<div style="margin: 20px;"> 
-    <div style="display: flex;">
-        <span id="repository-select-container"></span>
-        <span id="tag-select-container"></span>
-    </div>
+   
+        <div id='controller'>
+            <div style="display: flex; gap: 10px;">
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <label for="repository-select">Select a repository:</label>
+                    <div id="repository-select-container"></div>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <label for="tag-select">Select a tag:</label>
+                    <div id="tag-select-container"></div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 8px;">
+                <span>Toggle Mode:</span>
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
 
 
 
-    <div id="lineage-tree-container" >
-        <p>Examine the evolution of a tag over time and determine which tag fits your security policy best.</p>
 
-        <svg></svg>
-    </div>
-    <div id="lineage-vulnerabilities-container">
-        <p>Growth of vulnerabilities over time for the selected lineage</p>
-        <svg></svg>
-        <div id="vuln-tooltip" style="
-        position: absolute;
-        max-width: 280px;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        padding: 8px;
-        font-family: sans-serif;
-        font-size: 13px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        pointer-events: none;
-        display: none;
-        z-index: 9999;
-    "></div>
-        <div id="icicle-tooltip" style="
+        <div id="lineage-tree-container">
+            <p>Examine the evolution of a tag over time and determine which tag fits your security policy best.</p>
+
+            <svg></svg>
+            <div id="icicle-tooltip" style="
         display: none;
         position: absolute;
         width: 300px;
@@ -67,12 +67,32 @@
         word-wrap: break-word;
         overflow-wrap: anywhere;
         white-space: normal;
-      "></div>      
-      
-    </div>
-    </div>
-</div>
+      "></div>
+        </div>
+        <div id="lineage-vulnerabilities-container">
+            <p>Growth of vulnerabilities over time for the selected lineage</p>
+            <div id="vuln-legend" style="margin-top: 10px;"></div>
+            <svg></svg>
+            <div id="vuln-tooltip" style="
+        position: absolute;
+        max-width: 280px;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 8px;
+        font-family: sans-serif;
+        font-size: 13px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        pointer-events: none;
+        display: none;
+        z-index: 9999;
+    "></div>
 
+
+        </div>
+    </div>
+    </div>
+ 
 
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

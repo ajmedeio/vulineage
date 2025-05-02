@@ -1,6 +1,13 @@
 :root {
-  --content-color: white;
-  --background-color: #1A1A1A;
+  --content-color: black;
+  --background-color: rgb(253, 250, 250);
+  --background-color-div: rgb(231, 227, 234);
+}
+
+.dark-mode {
+  --content-color: #f0f0f0;
+  --background-color: #1c1c1c;
+  --background-color-div: #303030;
 }
 
 .axis {
@@ -43,10 +50,11 @@
 }
 
 body {
-  font-family: "Open Sans";
+  font-family: "Montserrat", sans-serif;
   margin: 0;
   color: var(--content-color);
   background-color: var(--background-color);
+
 }
 
 #main {
@@ -55,4 +63,122 @@ body {
 #select {
   max-height: 250px;
   overflow-y: auto;
+}
+
+#lineage-tree-container {
+ background-color: var(--background-color-div);
+  border-radius: 5px;
+border-color: #b3b0b0;
+  border-width: 1px;
+  border-style: solid;
+  padding: 10px;
+  margin: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  
+}
+
+#controller {
+  background-color: var(--background-color);
+  border-radius: 5px;
+  border-color: #c1bfbf;
+  border-width: 1px;
+  border-style: solid;
+  padding: 10px;
+  margin: 10px;
+}
+
+#lineage-tree-container > svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+#lineage-vulnerabilities-container {
+  background-color: var(--background-color-div);
+  border-radius: 5px;
+  border-color: #c1bfbf;
+  border-width: 1px;
+  border-style: solid;
+  padding: 10px;
+  margin: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+}
+
+#lineage-vulnerabilities-container > svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* SWITCH */
+
+.switch {
+  position: relative;
+  margin-left: auto;
+
+  width: 50px;
+  height: 28px;
+}
+
+/* Hide default checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 28px;
+}
+
+/* Circle inside the slider */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+/* When checked */
+.switch input:checked + .slider {
+  background-color: #a88ef4;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* Optional round style */
+.slider.round {
+  border-radius: 28px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* CONTROLLER */
+
+#controller {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

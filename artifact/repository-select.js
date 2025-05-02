@@ -12,9 +12,9 @@
     const container = d3.select('#repository-select-container');
 
     // Add a label
-    container.append('label')
-        .attr('for', 'repository-select')
-        .text('Select a repository:');
+    // container.append('label')
+    //     .attr('for', 'repository-select')
+    //     .text('Select a repository:');
 
     // Create a single-select dropdown
     container.append('select')
