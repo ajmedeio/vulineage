@@ -41,22 +41,17 @@ For windows user, just change the double quotes into single quotes in `curl` com
 ![Architecture diagram](docs/rough-architecture.png)
 
 ## Visualization Information
+It includes a zoomable icicle plot, a dynamic vulnerability timeline with detailed per-category vulnerability count, and hover-based image metadata — the system enables users to track the propagation of vulnerabilities, determine lineage health, and select the most secure image versions.
 
-### Main Idea
-Network Chart
-Will create a network visualization of a few images, then these below created visualization can be called upon the seleted image id
+### Frontend Information
+* artifact/index.html – entry point
 
-[Harshit] I am thinking of creating something like lab9, where in separate tab we can have the below mentioned visualization
+* lineage-tree_v2.js – icicle plot with hover/click support
 
-### Network, just like lab 8
+* network.js – D3-based force-directed graph
 
-### Image Vulnerabilities
-Bar Chart
-This will give count of individual vulnerabilities of a given image id
+* image_vulnerabilities.js – per image total count for different categories of vulnerabilities
 
-### Image Details
+* lineage_vulnerabilities_growth.js - time-series vulnerability chart
 
-### Growth of Vulnerabilities
-Line Graph
-This will give a time series of view of how vulnerabilies grew over time per image / lineage
 
