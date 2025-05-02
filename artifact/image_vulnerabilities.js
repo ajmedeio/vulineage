@@ -69,7 +69,7 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
     const WIDTH = window.innerWidth - 20;
     const HEIGHT = 400;
     const BAR_HEIGHT = 100;
-    const PADDING = { t: 40, r: 40, b: 40, l: 30 };
+    const PADDING = { t: 40, r: 40, b: 40, l: 40 };
 
     const svg = d3.select("#lineage-vulnerabilities-container > svg");
     svg.selectAll('*').remove();
@@ -109,7 +109,7 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
 
     chartG.append('g')
         .attr('transform', `translate(0,${chartHeight})`)
-        .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat('%b %d')));
+        .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat('%b %d %Y')));
 
     chartG.append('g')
         .call(d3.axisLeft(yScale));
