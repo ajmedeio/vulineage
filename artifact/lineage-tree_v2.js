@@ -17,8 +17,6 @@ function initLineageTree(data) {
         if (node.children) node.children.forEach(collectTags);
     })(data);
 
-    const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, allTags.length));
-
     // Compute hierarchy and layout
     const hierarchy = d3.hierarchy(data)
         .sum(d => {
@@ -31,9 +29,13 @@ function initLineageTree(data) {
         .sort((a, b) => b.startDate - a.startDate || b.endDate - b.endDate || b.endOfLife - a.endOfLife);
 
     const nodeHeight = 80; // allow 80px per depth level
-    const root = d3.partition()
-        .size([width, (hierarchy.height + 1) * nodeHeight])
-        (hierarchy);
+    const root = d3.partition().size([width, (hierarchy.height + 1) * nodeHeight])(hierarchy);
+    let maxDepth = 0
+    root.descendants().forEach(node => {
+        maxDepth = Math.max(node.depth, maxDepth)
+    })
+    console.log(maxDepth)
+    const color = d3.scaleOrdinal(d3.quantize(t => d3.interpolateHsl("purple", d3.hsl("purple").brighter(2))(t), maxDepth + 1));
 
     const svg = d3.select("#lineage-tree-container > svg")
         .attr("viewBox", [0, 0, width, (hierarchy.height + 1) * nodeHeight + 20])
@@ -47,27 +49,22 @@ function initLineageTree(data) {
         .selectAll("g")
         .data(root.descendants())
         .join("g")
-        // .attr("transform", d => `translate(${d.x0},${d.y0})`);
         .attr("transform", d => `translate(${d.x0},${d.y0})`);
-
 
     const rect = cell.append("rect")
         .attr("width", d => rectWidth(d))
         .attr("height", d => Math.max(d.y1 - d.y0, minHeight))
         .attr("fill-opacity", 0.6)
-        .attr("fill", d => d.depth === 0 ? rootColor : color(d.data.tags))
+        .attr("fill", d => d.depth === 0 ? rootColor : color(d.depth))
         .attr("stroke", d => {
             //if (!d.data.endOfLife) return "red";
-            if (d.data.endOfLife === 1) return "green";
-            return "red";
+            if (d.data.endOfLife === 1) return "lightgreen";
+            return "gray";
         })
         .attr("stroke-width", d => {
-            //if (!d.data.endOfLife) return 4; 
-            if (d.data.endOfLife === 1) return 4;
+            if (d.data.endOfLife === 1) return 2;
             return 4;
         })
-        // .attr("stroke", d => d.data.endOfLife == 0? "red" : "none")
-        // .attr("stroke-width", d => d.data.endOfLife == 0? 3 : 0)
         .style("cursor", "pointer")
         .on("click", clicked)
         .on("mouseover", handleMouseOver)
@@ -77,10 +74,10 @@ function initLineageTree(data) {
 
     const text = cell.append("text")
         .style("user-select", "none")
-        .style("font-size", "15px")  //  make text smaller here
+        .style("font-size", "16px")  //  make text smaller here
         .attr("pointer-events", "none")
         .style("stroke", "white")           // white outline
-        .style("stroke-width", "3px")
+        .style("stroke-width", "1px")
         .style("paint-order", "stroke")
         .style("fill", "black")
         .attr("transform", d => {
@@ -88,24 +85,13 @@ function initLineageTree(data) {
             const yOffset = (d.y1 - d.y0) / 2; // distance from top edge (smaller = closer to top)
             return `translate(${xCenter},${yOffset}) rotate(270)`;
         })
-
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "middle")
         .attr("fill-opacity", d => +labelVisible(d))
         .text(d => d.data.tags.substring(1, d.data.tags.length - 1).split(",")[0].replace(/'/g, ''));
 
-    //TODO show all tags in when clicked
-
     const tspan = text.append("tspan")
         .attr("fill-opacity", d => labelVisible(d) * 0.7);
-
-
-
-    cell.append("title")
-        .text(d => {
-            const days = Math.round((d.data.endDate - d.data.startDate) / 86400);
-            return `${d.ancestors().map(d => d.data.tags).reverse().join("/")}\nLifespan: ${days} days`;
-        });
 
     let focus = root;
     function clicked(event, p) {
@@ -116,7 +102,7 @@ function initLineageTree(data) {
         // Dispatch a custom event
         const tags = p.data.tags;
         const lineageId = p.data.id || p.data.lineageId || p.data.name;
-        const lineageColor = p.depth === 0 ? rootColor : color(p.data.tags);
+        const lineageColor = p.depth === 0 ? rootColor : color(p.depth);
 
         window.dispatchEvent(new CustomEvent('lineageClicked', {
             detail: {
@@ -129,19 +115,19 @@ function initLineageTree(data) {
             }
         }));
 
-        root.each(d => d.target = {
-            x0: (d.x0 - focus.x0) / (focus.x1 - focus.x0) * width,
-            x1: (d.x1 - focus.x0) / (focus.x1 - focus.x0) * width,
-            y0: d.y0 - focus.y0,
-            y1: d.y1 - focus.y0
-        });
+        // root.each(d => d.target = {
+        //     x0: (d.x0 - focus.x0) / (focus.x1 - focus.x0) * width,
+        //     x1: (d.x1 - focus.x0) / (focus.x1 - focus.x0) * width,
+        //     y0: d.y0 - focus.y0,
+        //     y1: d.y1 - focus.y0
+        // });
 
-        const t = cell.transition().duration(750)
-            .attr("transform", d => `translate(${d.target.x0},${d.target.y0})`);
+        // const t = cell.transition().duration(750)
+        //     .attr("transform", d => `translate(${d.target.x0},${d.target.y0})`);
 
-        rect.transition(t).attr("width", d => rectWidth(d.target));
-        text.transition(t).attr("fill-opacity", d => +labelVisible(d.target));
-        tspan.transition(t).attr("fill-opacity", d => labelVisible(d.target) * 0.7);
+        // rect.transition(t).attr("width", d => rectWidth(d.target));
+        // text.transition(t).attr("fill-opacity", d => +labelVisible(d.target));
+        // tspan.transition(t).attr("fill-opacity", d => labelVisible(d.target) * 0.7);
     }
 
     function handleMouseOver(event, d) {
@@ -174,18 +160,35 @@ function initLineageTree(data) {
             if (!data) {
                 tooltip.innerHTML = `<strong>No image found for lineage ${lineageId}</strong>`;
             } else {
+                // Dispatch a custom event
+                const tags = d.data.tags;
+                const lineageId = d.data.id || d.data.lineageId || d.data.name;
+                const lineageColor = d.depth === 0 ? rootColor : color(d.depth);
+
+                window.dispatchEvent(new CustomEvent('lineageHovered', {
+                    detail: {
+                        lineageId,
+                        tags,
+                        startDate: d.data.startDate,
+                        endDate: d.data.endDate,
+                        endOfLife: d.data.endOfLife,
+                        color: lineageColor
+                    }
+                }));
+
+                const mainTag = data.lineage_tags ? data.lineage_tags.substring(1, d.data.tags.length - 1).split(",")[0].replace(/'/g, '') : "N/A";
                 const imageTags = data.image_tags ? data.image_tags.replace(/[\[\]']+/g, '') : "N/A";
                 const lineageTags = data.lineage_tags ? data.lineage_tags.replace(/[\[\]']+/g, '') : "N/A";
                 tooltip.innerHTML = `
-              <strong>Latest Image ID:</strong> <code>${data.image_id}</code><br>
-              <strong>Image Tags:</strong> ${imageTags}<br>
-              <strong>Base Image Tag:</strong> ${data.image_base_tag || "N/A"}<br>
-              <strong>Latest Image Commit:</strong> ${formatDate(data.image_commit_date)}<br><br>
-              <strong>Lineage Start:</strong> ${formatDate(data.first_instance_commit_date)}<br>
-              <strong>Lineage Status:</strong> ${!data.end_of_life ? `<span style="color:red; font-weight:bold;">🛑 End of Life</span>` : `<span style="color:green;">✅ Active</span>`}
-            `;
+                    <h3>Lineage <code>${mainTag}</code></h3>
+                    <strong>Latest Image ID:</strong> <code>${data.image_id}</code><br>
+                    <strong>Image Tags:</strong> ${imageTags}<br>
+                    <strong>Base Image Tag:</strong> ${data.image_base_tag || "N/A"}<br>
+                    <strong>Latest Image Commit:</strong> ${formatDate(data.image_commit_date)}<br><br>
+                    <strong>Lineage Start:</strong> ${formatDate(data.first_instance_commit_date)}<br>
+                    <strong>Lineage Status:</strong> ${!data.end_of_life ? `<span style="color:red; font-weight:bold;">🛑 End of Life</span>` : `<span style="color:green;">✅ Active</span>`}
+                `;
             }
-
             tooltip.style.display = "block";
         });
     }
@@ -198,6 +201,7 @@ function initLineageTree(data) {
     function handleMouseOut() {
         const tooltip = document.getElementById("icicle-tooltip");
         tooltip.style.display = "none";
+        window.dispatchEvent(new CustomEvent('lineageExited', {}));
     }
 
     function formatDate(unixTimestamp) {
