@@ -191,8 +191,8 @@ function initLineageTree(data) {
     }
 
     function handleMouseMove(event) {
-        const tooltip = document.getElementById("icicle-tooltip");
-        //adjustTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
+        const tooltip = d3.select("#icicle-tooltip");
+        adjustLineageTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
     }
 
     function handleMouseOut(d) {
@@ -320,7 +320,7 @@ async function fetchLineageTreeAsStratifyRoot(root_lineage_id) {
 }
 
 // To handle the tooltip don't go outside screen
-function adjustTooltipPosition(left, top, tooltip) {
+function adjustLineageTooltipPosition(left, top, tooltip) {
     const rect = tooltip.node().getBoundingClientRect();
     const tooltipWidth = rect.width;
     const tooltipHeight = rect.height;

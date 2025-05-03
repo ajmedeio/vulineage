@@ -148,7 +148,7 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
                 showTooltipWithBarChart(event, image);
             })
             .on("mousemove", event => {
-                adjustTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
+                adjustVulnTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
             })
             .on("mouseout", () => {
                 tooltip.style("display", "none");
@@ -210,7 +210,7 @@ function showTooltipWithBarChart(event, image) {
 
 
     tooltip.style("display", "block");
-    adjustTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
+    adjustVulnTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
 
     tooltip.html(""); // clear previous
     tooltip.append("div")
@@ -263,7 +263,7 @@ function showTooltipWithBarChart(event, image) {
 }
 
 // To handle the tooltip don't go outside screen
-function adjustTooltipPosition(left, top, tooltip) {
+function adjustVulnTooltipPosition(left, top, tooltip) {
     const rect = tooltip.node().getBoundingClientRect();
     const tooltipWidth = rect.width;
     const tooltipHeight = rect.height;
