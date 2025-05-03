@@ -62,8 +62,14 @@ function lineageVulnerabilitiesGrowthDataPreprocessor(data) {
     return { dataset, imageData: Object.values(imageData).sort((a, b) => a.date - b.date) };
 }
 
+let showVulnTooltip = false;
+
 // --- Create Vulnerabilities Line + Bar Chart ---
 function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
+    if (!state) {
+        console.log("Waiting for state to load")
+        return
+    }
     const { dataset, imageData } = state;
     const container = document.getElementById('lineage-vulnerabilities-container');
     const WIDTH = container.getBoundingClientRect().width;
@@ -139,21 +145,79 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
             .attr("r", 3)
             .attr("fill", severityColors[severityGroup.severity])
             .attr("opacity", 0.8)
-            .on("mouseover", (event, d) => {
-                const dateStr = d.date.toDateString();
-                const image = imageData.find(img => img.date.toDateString() === dateStr);
-                if (!image) return;
-
-                showTooltipWithBarChart(event, image);
-            })
-            .on("mousemove", event => {
-                adjustVulnTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
-            })
-            .on("mouseout", () => {
-                tooltip.style("display", "none");
-                tooltip.selectAll("*").remove();
-            });
     });
+
+    // Create a group for the hover elements
+    const hoverGroup = chartG.append('g')
+        .attr('class', 'hover-group')
+        .style('display', 'none');
+    
+    // Add the vertical line
+    const verticalLine = hoverGroup.append('line')
+        .attr('stroke', 'yellow')
+        .attr('stroke-width', 1)
+        .attr('y1', 0)
+        .attr('y2', chartHeight);
+    
+    // Add the hover circle
+    const hoverCircle = hoverGroup.append('circle')
+        .attr('r', 4)
+        .attr('fill', 'yellow')
+        .attr('stroke', 'yellow');
+
+    let focusedImage = null;
+    // Add invisible overlay for mouse tracking
+    chartG.append('rect')
+        .attr('class', 'overlay')
+        .attr('width', chartWidth)
+        .attr('height', chartHeight)
+        .style('opacity', 0)
+        .on('mouseover', (event) => {
+            hoverGroup.style('display', null)
+            shouldShowVulnTooltip = true
+        })
+        .on('mouseout', (event) => {
+            hoverGroup.style('display', 'none')
+            tooltip.style("display", "none");
+            tooltip.selectAll("*").remove();
+        })
+        .on('mousemove', function(event) {
+            const [mouseX, mouseY] = d3.pointer(event, this);
+            
+            // Update vertical line position
+            verticalLine
+                .attr('x1', mouseX)
+                .attr('x2', mouseX);
+            
+            // Update circle position
+            const date = xScale.invert(mouseX);
+            const bisect = d3.bisector(d => d.date).left;
+            const imageIndex = bisect(imageData, date, 1)
+            const image = imageData[imageIndex]
+            if (!image) {
+                return;
+            }
+            let imageChanged = focusedImage !== image
+            focusedImage = image
+            
+            // Find the closest data point for each severity
+            // dataset.forEach(severityGroup => {
+            //     const index = bisect(severityGroup.values, date, 1);
+            //     const a = severityGroup.values[index];
+            //     const b = severityGroup.values[index + 1];
+                
+            //     if (!a || !b) return;
+                
+            //     const point = date - a.date > b.date - date ? b : a;
+            //     const yPos = yScale(point.count);
+            // });
+            if (imageChanged) {
+                showVulnTooltip = true
+                showTooltipWithBarChart(event, image)
+            }
+            adjustVulnTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
+        });
+
     renderSeverityLegend("vuln-legend");
 }
 
@@ -193,8 +257,10 @@ function renderSeverityLegend(containerId) {
 
 
 function showTooltipWithBarChart(event, image) {
-    // const tooltip = d3.select("#vuln-tooltip");
-
+    if (!image) {
+        tooltip.html(""); // clear previous
+        return
+    }
     const severityLevels = ["Low", "Medium", "High", "Critical", "Unknown"];
     const severityColors = {
         Low: '#4CAF50', Medium: '#FFC107', High: '#FF5722', Critical: '#D32F2F', Unknown: '#9E9E9E'
