@@ -290,8 +290,8 @@ window.addEventListener('tagSelected', async (event) => {
     await fetchLineageVulnerabilitiesGrowth(rootLineageId, null);
 });
 
-let clickedLineage = null
-let prioritizedLineage = null
+let clickedLineageEvent = null
+let prioritizedLineageEvent = null
 
 function handleLineageEvent(event) {
     const { startDate, endDate, color } = event.detail;
@@ -300,20 +300,20 @@ function handleLineageEvent(event) {
 }
 
 window.addEventListener('lineageClicked', (event) => {
-    clickedLineage = event
-    prioritizedLineage = event
-    handleLineageEvent(prioritizedLineage)
+    clickedLineageEvent = event
+    prioritizedLineageEvent = event
+    handleLineageEvent(prioritizedLineageEvent)
 });
 
 window.addEventListener('lineageHovered', (event) => {
-    if (clickedLineage === null) {
-        clickedLineage = event
+    if (clickedLineageEvent === null) {
+        clickedLineageEvent = event
     }
-    prioritizedLineage = event
-    handleLineageEvent(prioritizedLineage)
+    prioritizedLineageEvent = event
+    handleLineageEvent(prioritizedLineageEvent)
 });
 
 window.addEventListener('lineageExited', (event) => {
-    prioritizedLineage = clickedLineage
-    handleLineageEvent(prioritizedLineage)
+    prioritizedLineageEvent = clickedLineageEvent
+    handleLineageEvent(prioritizedLineageEvent)
 });

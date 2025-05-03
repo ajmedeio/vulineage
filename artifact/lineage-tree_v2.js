@@ -1,12 +1,11 @@
 // const SHARED_WIDTH = window.innerWidth - 20;
 const SHARED_PADDING = 30;
-
+let clickedLineage = null;
 function initLineageTree(data) {
     const container = document.getElementById('lineage-vulnerabilities-container');
     const SHARED_WIDTH = container.getBoundingClientRect().width;
     const width = SHARED_WIDTH;
     let isTooltipPinned = false;
-    const rootColor= '#1d7ea1';
     const minWidth = 10;
     const minHeight = 10;
 
@@ -34,8 +33,7 @@ function initLineageTree(data) {
     root.descendants().forEach(node => {
         maxDepth = Math.max(node.depth, maxDepth)
     })
-    console.log(maxDepth)
-    const color = d3.scaleOrdinal(d3.quantize(t => d3.interpolateHsl("purple", d3.hsl("purple").brighter(2))(t), maxDepth + 1));
+    const color = d3.scaleOrdinal(d3.quantize(t => d3.interpolateHsl("mediumpurple", d3.hsl("mediumpurple").darker(2))(t), maxDepth + 1));
 
     const svg = d3.select("#lineage-tree-container > svg")
         .attr("viewBox", [0, 0, width, (hierarchy.height + 1) * nodeHeight + 20])
@@ -55,16 +53,12 @@ function initLineageTree(data) {
         .attr("width", d => rectWidth(d))
         .attr("height", d => Math.max(d.y1 - d.y0, minHeight))
         .attr("fill-opacity", 0.6)
-        .attr("fill", d => d.depth === 0 ? rootColor : color(d.depth))
+        .attr("fill", d => color(d.depth))
         .attr("stroke", d => {
-            //if (!d.data.endOfLife) return "red";
             if (d.data.endOfLife === 1) return "lightgreen";
             return "gray";
         })
-        .attr("stroke-width", d => {
-            if (d.data.endOfLife === 1) return 2;
-            return 4;
-        })
+        .attr("stroke-width", 2)
         .style("cursor", "pointer")
         .on("click", clicked)
         .on("mouseover", handleMouseOver)
@@ -74,9 +68,9 @@ function initLineageTree(data) {
 
     const text = cell.append("text")
         .style("user-select", "none")
-        .style("font-size", "16px")  //  make text smaller here
+        .style("font-size", "16px")
         .attr("pointer-events", "none")
-        .style("stroke", "white")           // white outline
+        .style("stroke", "white")
         .style("stroke-width", "1px")
         .style("paint-order", "stroke")
         .style("fill", "black")
@@ -95,6 +89,13 @@ function initLineageTree(data) {
 
     let focus = root;
     function clicked(event, p) {
+        if (clickedLineage !== null) {
+            clickedLineage.attr("stroke", d => {
+                if (d.data.endOfLife === 1) return "lightgreen";
+                return "gray";
+            })
+        }
+        clickedLineage = d3.select(event.target)
         if (!p) return;
         focus = focus === p ? p.parent : p;
         if (!focus) return;
@@ -102,7 +103,7 @@ function initLineageTree(data) {
         // Dispatch a custom event
         const tags = p.data.tags;
         const lineageId = p.data.id || p.data.lineageId || p.data.name;
-        const lineageColor = p.depth === 0 ? rootColor : color(p.depth);
+        const lineageColor = color(p.depth);
 
         window.dispatchEvent(new CustomEvent('lineageClicked', {
             detail: {
@@ -114,20 +115,6 @@ function initLineageTree(data) {
                 color: lineageColor
             }
         }));
-
-        // root.each(d => d.target = {
-        //     x0: (d.x0 - focus.x0) / (focus.x1 - focus.x0) * width,
-        //     x1: (d.x1 - focus.x0) / (focus.x1 - focus.x0) * width,
-        //     y0: d.y0 - focus.y0,
-        //     y1: d.y1 - focus.y0
-        // });
-
-        // const t = cell.transition().duration(750)
-        //     .attr("transform", d => `translate(${d.target.x0},${d.target.y0})`);
-
-        // rect.transition(t).attr("width", d => rectWidth(d.target));
-        // text.transition(t).attr("fill-opacity", d => +labelVisible(d.target));
-        // tspan.transition(t).attr("fill-opacity", d => labelVisible(d.target) * 0.7);
     }
 
     function handleMouseOver(event, d) {
@@ -163,7 +150,17 @@ function initLineageTree(data) {
                 // Dispatch a custom event
                 const tags = d.data.tags;
                 const lineageId = d.data.id || d.data.lineageId || d.data.name;
-                const lineageColor = d.depth === 0 ? rootColor : color(d.depth);
+                const lineageColor = color(d.depth);
+                
+                const target = d3.select(event.target)
+                target.attr("stroke", 'yellow')
+                if (clickedLineage !== null) {
+                        clickedLineage.attr("stroke", d => {
+                            if (d.data.id !== target.data.id) return 'yellow'
+                            if (d.data.endOfLife === 1) return "lightgreen";
+                            return "gray";
+                        })
+                }
 
                 window.dispatchEvent(new CustomEvent('lineageHovered', {
                     detail: {
@@ -175,7 +172,7 @@ function initLineageTree(data) {
                         color: lineageColor
                     }
                 }));
-
+                
                 const mainTag = data.lineage_tags ? data.lineage_tags.substring(1, d.data.tags.length - 1).split(",")[0].replace(/'/g, '') : "N/A";
                 const imageTags = data.image_tags ? data.image_tags.replace(/[\[\]']+/g, '') : "N/A";
                 const lineageTags = data.lineage_tags ? data.lineage_tags.replace(/[\[\]']+/g, '') : "N/A";
@@ -195,10 +192,17 @@ function initLineageTree(data) {
 
     function handleMouseMove(event) {
         const tooltip = document.getElementById("icicle-tooltip");
-        adjustTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
+        //adjustTooltipPosition(event.pageX + 10, event.pageY + 10, tooltip);
     }
 
-    function handleMouseOut() {
+    function handleMouseOut(d) {
+        d3.select(d.target).attr("stroke", d => {
+            if (d.data.endOfLife === 1) return "lightgreen";
+            return "gray";
+        })
+        if (clickedLineage !== null) {
+            clickedLineage.attr("stroke", 'yellow');
+        }
         const tooltip = document.getElementById("icicle-tooltip");
         tooltip.style.display = "none";
         window.dispatchEvent(new CustomEvent('lineageExited', {}));
@@ -341,7 +345,4 @@ window.addEventListener('tagSelected', async function (event) {
     const selectedTag = event.detail;
     const root = await fetchLineageTreeAsStratifyRoot(selectedTag);
     const svgNode = initLineageTree(root);
-
-    // document.getElementById('lineage-tree-container').innerHTML = ''; // clear previous
-    // document.getElementById('lineage-tree-container').appendChild(svgNode); // append new SVG
 });
