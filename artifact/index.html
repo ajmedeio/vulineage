@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html lang="en" class="dark-mode">
 
 <head>
     <meta charset="UTF-8">
@@ -23,77 +23,83 @@
 </head>
 
 <body>
-   
-        <div id='controller'>
-            <div style="display: flex; gap: 10px;">
-                <div style="display: flex; align-items: center; justify-content: center;">
-                    <label for="repository-select">Select a repository:</label>
-                    <div id="repository-select-container"></div>
-                </div>
-                <div style="display: flex; align-items: center; justify-content: center;">
-                    <label for="tag-select">Select a tag:</label>
-                    <div id="tag-select-container"></div>
-                </div>
+    <h3 style="margin: 10px;">
+        Vulineage: Choosing docker image versions with security in mind!<br>
+    </h3>
+    <div id='controller'>
+        <div style="display: flex; gap: 10px;">
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <label for="repository-select">Select a <a target="_blank"
+                        href="https://docs.docker.com/get-started/docker-overview/">docker</a> repository:</label>
+                <div id="repository-select-container"></div>
             </div>
-            <div style="display: flex; justify-content: center; gap: 8px;">
-                <span>Toggle Mode:</span>
-                <label class="switch">
-                    <input type="checkbox" id="darkModeToggle">
-                    <span class="slider round"></span>
-                </label>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <label for="tag-select">Select a tag:</label>
+                <div id="tag-select-container"></div>
             </div>
         </div>
-
-
-
-
-        <div id="lineage-tree-container">
-            <p>Examine the evolution of a tag over time and determine which tag fits your security policy best.</p>
-
-            <svg></svg>
-            <div id="icicle-tooltip" style="
-        display: none;
-        position: absolute;
-        width: 300px;
-        z-index: 9999;
-        font-size: 13px;
-        background-color: #202020;
-        color: white;
-        border: 1px solid #555;
-        border-radius: 8px;
-        padding: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-        pointer-events: none;
-        word-wrap: break-word;
-        overflow-wrap: anywhere;
-        white-space: normal;
-      "></div>
-        </div>
-        <div id="lineage-vulnerabilities-container">
-            <p>Growth of vulnerabilities over time for the selected lineage</p>
-            <div id="vuln-legend" style="margin-top: 10px;"></div>
-            <svg></svg>
-            <div id="vuln-tooltip" style="
-        position: absolute;
-        max-width: 280px;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        padding: 8px;
-        font-family: sans-serif;
-        font-size: 13px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        pointer-events: none;
-        display: none;
-        z-index: 9999;
-    "></div>
-
-
+        <div style="display: flex; justify-content: center; gap: 8px;">
+            <span>Dark Mode:</span>
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle" checked="true">
+                <span class="slider round"></span>
+            </label>
         </div>
     </div>
-    </div>
- 
 
+
+
+
+    <div id="lineage-tree-container">
+        <p>
+            After selecting a docker repository/tag pair, you'll observe the tag's lineage here. A lineage is
+            a hierarchical structure. For example, most repositories have a tag called <strong>latest</strong> and it
+            can be likened to the
+            <strong>main</strong> branch of a git repository where a tag like <strong>latest</strong> might contain all
+            the images (i.e. changes made to the docker repo/tag pair, think git commits).
+            Going further with the example, the <strong>latest</strong> tag might also contain all images tagged with
+            <strong>v3</strong> which, recursively,
+            might only contain the images tagged with v3.1, v3.2, and v3.3.
+        </p>
+
+        <svg><text x="25" y="50" style="fill: gray">Please select a repository/tag pair...</text></svg>
+        <div id="icicle-tooltip" style="
+            display: none;
+            position: absolute;
+            width: 300px;
+            z-index: 9999;
+            font-size: 13px;
+            background-color: #202020;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            pointer-events: none;
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
+            white-space: normal;
+        "></div>
+    </div>
+    <div id="lineage-vulnerabilities-container">
+        <p>Growth of vulnerabilities over time for the selected lineage</p>
+        <div id="vuln-legend" style="margin-top: 10px;"></div>
+        <svg><text x="25" y="50" style="fill: gray">Please select a repository/tag pair...</text></svg>
+        <div id="vuln-tooltip" style="
+            position: absolute;
+            max-width: 280px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 8px;
+            font-family: sans-serif;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            pointer-events: none;
+            display: none;
+            z-index: 9999;
+        "></div>
+    </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
