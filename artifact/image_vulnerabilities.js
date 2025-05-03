@@ -131,7 +131,6 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
             .attr('stroke-width', 2)
             .attr('d', line);
 
-
         chartG.selectAll(`.dot-${severityGroup.severity}`)
             .data(severityGroup.values)
             .join("circle")
@@ -154,11 +153,8 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
                 tooltip.style("display", "none");
                 tooltip.selectAll("*").remove();
             });
-
-        renderSeverityLegend("vuln-legend");
     });
-
-
+    renderSeverityLegend("vuln-legend");
 }
 
 function renderSeverityLegend(containerId) {

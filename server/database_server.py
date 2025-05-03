@@ -8,7 +8,7 @@ PORT = 9631
 DIRECTORY = "~/Desktop"
 MAX_BODY_SIZE = 256 * 1024  # 256 KB
 
-@functools.lru_cache(maxsize=256)
+@functools.lru_cache(maxsize=25)
 def db_read(query):
     cursor = db_connection.cursor()
     cursor.execute(query)
