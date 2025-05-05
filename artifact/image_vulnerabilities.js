@@ -1,5 +1,9 @@
 // --- Global State ---
 let lineageVulnerabilitiesGlobalState = null;
+const severityColors = {
+    Low: '#4CAF50', Medium: '#FFC107', High: '#FF5722', Critical: '#D32F2F', Unknown: '#9E9E9E' , Total: '#1F51FF'
+};
+
 const tooltip = d3.select("#vuln-tooltip");
 // --- Fetch All Vulnerability Data for Root Lineage ---
 async function fetchLineageVulnerabilitiesGrowth(root_lineage_id, highlightInfo) {
@@ -58,6 +62,21 @@ function lineageVulnerabilitiesGrowthDataPreprocessor(data) {
 
         return { severity, values };
     });
+
+    const totalValues = {};
+    Object.keys(grouped).forEach(dateStr => {
+        totalValues[dateStr] = Object.values(grouped[dateStr]).reduce((sum, count) => sum + count, 0);
+    });
+
+    const totalSeries = {
+        severity: "Total",
+        values: Object.entries(totalValues).map(([dateStr, count]) => ({
+            date: new Date(dateStr),
+            count: count
+        })).sort((a, b) => a.date - b.date)
+    };
+
+    dataset.push(totalSeries);
 
     return { dataset, imageData: Object.values(imageData).sort((a, b) => a.date - b.date) };
 }
@@ -121,9 +140,9 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
     chartG.append('g')
         .call(d3.axisLeft(yScale));
 
-    const severityColors = {
-        Low: '#4CAF50', Medium: '#FFC107', High: '#FF5722', Critical: '#D32F2F', Unknown: '#9E9E9E'
-    };
+    // const severityColors = {
+    //     Low: '#4CAF50', Medium: '#FFC107', High: '#FF5722', Critical: '#D32F2F', Unknown: '#9E9E9E', Total: '#000000'
+    // };
 
     const line = d3.line()
         .x(d => xScale(d.date))
@@ -151,14 +170,14 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
     const hoverGroup = chartG.append('g')
         .attr('class', 'hover-group')
         .style('display', 'none');
-    
+
     // Add the vertical line
     const verticalLine = hoverGroup.append('line')
         .attr('stroke', 'yellow')
         .attr('stroke-width', 1)
         .attr('y1', 0)
         .attr('y2', chartHeight);
-    
+
     // Add the hover circle
     const hoverCircle = hoverGroup.append('circle')
         .attr('r', 4)
@@ -181,14 +200,14 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
             tooltip.style("display", "none");
             tooltip.selectAll("*").remove();
         })
-        .on('mousemove', function(event) {
+        .on('mousemove', function (event) {
             const [mouseX, mouseY] = d3.pointer(event, this);
-            
+
             // Update vertical line position
             verticalLine
                 .attr('x1', mouseX)
                 .attr('x2', mouseX);
-            
+
             // Update circle position
             const date = xScale.invert(mouseX);
             const bisect = d3.bisector(d => d.date).left;
@@ -199,15 +218,15 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
             }
             let imageChanged = focusedImage !== image
             focusedImage = image
-            
+
             // Find the closest data point for each severity
             // dataset.forEach(severityGroup => {
             //     const index = bisect(severityGroup.values, date, 1);
             //     const a = severityGroup.values[index];
             //     const b = severityGroup.values[index + 1];
-                
+
             //     if (!a || !b) return;
-                
+
             //     const point = date - a.date > b.date - date ? b : a;
             //     const yPos = yScale(point.count);
             // });
@@ -222,14 +241,14 @@ function CreateLineageVulnerabilitiesGrowthChart(state, highlightInfo = null) {
 }
 
 function renderSeverityLegend(containerId) {
-    const levels = ["Low", "Medium", "High", "Critical", "Unknown"];
-    const severityColors = {
-        Low: '#4CAF50',
-        Medium: '#FFC107',
-        High: '#FF5722',
-        Critical: '#D32F2F',
-        Unknown: '#9E9E9E'
-    };
+    const levels = ["Low", "Medium", "High", "Critical", "Unknown", "Total"];
+    // const severityColors = {
+    //     Low: '#4CAF50',
+    //     Medium: '#FFC107',
+    //     High: '#FF5722',
+    //     Critical: '#D32F2F',
+    //     Unknown: '#9E9E9E'
+    // };
 
     const container = d3.select(`#${containerId}`);
     container.selectAll("*").remove(); // clear existing legend
@@ -262,9 +281,7 @@ function showTooltipWithBarChart(event, image) {
         return
     }
     const severityLevels = ["Low", "Medium", "High", "Critical", "Unknown"];
-    const severityColors = {
-        Low: '#4CAF50', Medium: '#FFC107', High: '#FF5722', Critical: '#D32F2F', Unknown: '#9E9E9E'
-    };
+
 
     const barHeight = 12;
     const barSpacing = 4;
@@ -343,7 +360,7 @@ function adjustVulnTooltipPosition(left, top, tooltip) {
     }
 
     tooltip.style("left", adjustedLeft + "px")
-           .style("top", adjustedTop + "px");
+        .style("top", adjustedTop + "px");
 }
 
 

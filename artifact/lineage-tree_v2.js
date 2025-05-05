@@ -58,7 +58,7 @@ function initLineageTree(data) {
             if (d.data.endOfLife === 1) return "lightgreen";
             return "gray";
         })
-        .attr("stroke-width", 2)
+        .attr("stroke-width", 5)
         .style("cursor", "pointer")
         .on("click", clicked)
         .on("mouseover", handleMouseOver)
